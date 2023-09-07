@@ -1,6 +1,6 @@
 import openai
 
-openai.api_key = "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"
+openai.api_key = "MY KEY"
 
 gpt_logs = []
 PREPROMPT = "you are an expert in chemistry and want to get data from a certain article into a perovskite database, \
