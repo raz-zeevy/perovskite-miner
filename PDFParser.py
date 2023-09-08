@@ -1,11 +1,9 @@
-import PyPDF2
-
 # This file converts pdf to plain text.
 from pypdf import PdfReader
 
 
 def main():
-    reader = PdfReader("data/paper3.pdf")
+    reader = PdfReader("data/p.pdf")
     text = ""
     for page in reader.pages:
         text += page.extract_text() + "\n"
