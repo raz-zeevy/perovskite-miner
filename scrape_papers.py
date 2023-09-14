@@ -1,3 +1,4 @@
+import argparse
 import os
 import subprocess
 
@@ -19,6 +20,10 @@ import selenium
 import time
 import pandas as pd
 
+
+DEBUG_MODE = False
+
+
 def urlencode(s):
     # urlencode <string>
     # Use Python's urllib.parse.quote to encode the string
@@ -29,15 +34,19 @@ def beep_on_error(func):
     def wrapper(*args, **kwargs):
         try:
             func(*args, **kwargs)
-        except:
+        except Exception as e:
             winsound.Beep(500,1000)  # Frequency: 500Hz, Duration: 1000ms (1 second)
+            if DEBUG_MODE:
+                print(e)
+                time.sleep(3000)
     return wrapper
 
 def get_driver():
     chrome_options = Options()
-    chrome_options.add_argument('--headless')  # Run headless
-    chrome_options.add_argument(
-        '--disable-gpu')  # Disable GPU acceleration (needed for some headless setups)
+    if not DEBUG_MODE:
+        chrome_options.add_argument('--headless')  # Run headless
+        chrome_options.add_argument(
+            '--disable-gpu')  # Disable GPU acceleration (needed for some headless setups)
     return webdriver.Chrome(
         service=ChromeService(ChromeDriverManager().install()),
         options=chrome_options)
@@ -52,6 +61,7 @@ def write_pdf(source,dest):
     with open(dest, "wb") as f:
         f.write(res.content)
         return True
+
 def sanitize(filename):
     # Define a regex pattern to match characters not allowed in file names
     invalid_chars = r'[\/:*?"<>|]'
@@ -87,6 +97,15 @@ def scrape_list(doi_list):
             print(f"Downloaded {doi}")
 
 if __name__ == '__main__':
+    # add argument --debug from the execution paramters to enable debug mode
+    # using argparse
+    parser = argparse.ArgumentParser(
+        description='Download papers from sci-hub')
+    parser.add_argument('--debug', action='store_true',
+                        help='enable debug mode')
+    args = parser.parse_args()
+    if args.debug:
+        DEBUG_MODE = True
     output_folder = 'data/papers/downloads'
     doi_list = np.loadtxt('data/papers/doi-list.txt', delimiter=",", dtype=str)
     # remove doi's that have already been downloaded
