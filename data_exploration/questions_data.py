@@ -2,20 +2,11 @@ import numpy as np
 import pandas as pd
 import openpyxl
 import jellyfish
-
 import const
 
 output_path = "../data/questions/questions_db.csv"
 
-FIELD_NAME = 'field_name'
 
-QID = "qid"
-
-GPT_QUESTION = "gpt_question"
-
-EXAMPLE_ANSWER = "example_answer"
-
-PROTOCOL_QUESTION = "protocol_question"
 
 
 def format_questions_and_save_5_4(
