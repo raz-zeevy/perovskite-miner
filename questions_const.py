@@ -1,15 +1,10 @@
-
 # questions DB constants
-
 FIELD_NAME = 'field_name'
 QID = "qid"
 GPT_QUESTION = "gpt_question"
 EXAMPLE_ANSWER = "example_answer"
 PROTOCOL_QUESTION = "protocol_question"
-
 #
-
-
 best_5p_fields = ['Add_lay_back', 'Add_lay_front',
                   'Backcontact_deposition_procedure',
                   'Backcontact_stack_sequence', 'Cell_architecture',
