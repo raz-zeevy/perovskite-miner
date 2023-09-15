@@ -1,3 +1,7 @@
+import sys
+
+sys.path.insert(0, '../data_exploration')
+
 from pypdf import PdfReader
 import tiktoken
 import os
@@ -55,34 +59,6 @@ def clean_pdf_text(text):
     return out_text
 
 
-def main(directory_path):
-    token_counts = []
-    clean_token_count = []
-    for root, dirs, files in os.walk(directory_path):
-        for file in files:
-            if file.endswith(".pdf"):
-                file_path = os.path.join(root, file)
-                try:
-                    text = read_pdf(file_path)
-                    token_counts.append(count_tokens(text))
-                    clean_text = clean_pdf_text(text)
-                    clean_token_count.append(count_tokens(clean_text))
-                except Exception as e:
-                    print(f"Could not read file '{file}' due to: {str(e)}")
-
-    mean_token_count = calculate_mean(token_counts)
-    mean_clean_token_count = calculate_mean(clean_token_count)
-
-    print(f"The mean number of tokens across all PDFs is: {mean_token_count}")
-    print(f"The mean number of tokens across all clean PDFs is: {mean_clean_token_count}")
-
-    std_token_count = calculate_std(token_counts)
-    std_clean_token_count = calculate_std(clean_token_count)
-
-    print(f"The standard deviation of tokens across all PDFs is: {std_token_count}")
-    print(f"The standard deviation of tokens across all clean PDFs is: {std_clean_token_count}")
-
-
 def create_text_from_questions_table():
     questions_pd = pd.read_csv('../data/questions/questions_db.csv')
     questions_pd = questions_pd[questions_pd['field_name'].notna()]['gpt_question']
@@ -112,16 +88,65 @@ class PaperPrompt:
         Initializes the PaperPrompt object with the paper PDF path and a list of questions.
     """
 
-    def __init__(self, paper_pdf_path: str, questions: List[str]):
+    # constants for q&a tokens
+
+    # add file prompt analysis
+
+    def __init__(self, paper_pdf_path: str, questions: List[str], max_tokens: int):
         """
         Initializes the PaperPrompt object with the paper PDF path and a list of questions.
         """
-        paper_prompt = clean_pdf_text(read_pdf(paper_pdf_path))
-        questions_prompt = ','.join(questions)
-        self.number_of_api_calls = 1
-        self.content_to_gpt = [[gpt_preview_prompt, paper_prompt, questions_prompt]]
+        self.contents = None
+        self.number_of_api_calls = None
+        self.paper_prompt = clean_pdf_text(read_pdf(paper_pdf_path))
+        self.questions = questions
+        self.generate_prompts()
+
+    def generate_prompts(self):
+        paper_tokens = count_tokens(self.paper_prompt)
+        if paper_tokens <= 13000:
+            self.number_of_api_calls = 1
+            questions_prompt = ','.join(self.questions)
+            self.contents = [[gpt_preview_prompt, self.paper_prompt, questions_prompt]]
+        elif paper_tokens <= 15000:
+            questions_middle = len(self.questions) / 2
+            first_questions_prompt = ','.join(self.questions[questions_middle:])
+            second_questions_prompt = ','.join(self.questions[:questions_middle])
+            self.number_of_api_calls = 2
+            self.contents = [[gpt_preview_prompt, self.paper_prompt, first_questions_prompt],
+                                   [gpt_preview_prompt, self.paper_prompt, second_questions_prompt]]
+        else:
+            print("Paper is more then 15000 tokens")
+            # todo: handle files that are greater then 15k tokens.
+            raise "todo"
 
 
-# if __name__ == '__main__':
-#     dir_path = "../data/papers"
-#     print(count_tokens(gpt_preview_prompt))
+def rows_to_strings(df):
+    return df.apply(lambda row: ' '.join(row.astype(str)), axis=1)
+
+
+def main(directory_path):
+    token_counts = []
+    clean_token_count = []
+    for root, dirs, files in os.walk(directory_path):
+        for file in files:
+            if file.endswith(".pdf"):
+                file_path = os.path.join(root, file)
+                try:
+                    text = read_pdf(file_path)
+                    token_counts.append(count_tokens(text))
+                    clean_text = clean_pdf_text(text)
+                    clean_token_count.append(count_tokens(clean_text))
+                except Exception as e:
+                    print(f"Could not read file '{file}' due to: {str(e)}")
+
+    mean_token_count = calculate_mean(token_counts)
+    mean_clean_token_count = calculate_mean(clean_token_count)
+
+    std_token_count = calculate_std(token_counts)
+    std_clean_token_count = calculate_std(clean_token_count)
+
+    print(f"The mean number of tokens across all PDFs is: {mean_token_count}")
+    print(f"The mean number of tokens across all clean PDFs is: {mean_clean_token_count}")
+    print(f"The standard deviation of tokens across all PDFs is: {std_token_count}")
+    print(f"The standard deviation of tokens across all clean PDFs is: {std_clean_token_count}")
