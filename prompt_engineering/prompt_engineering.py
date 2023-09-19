@@ -119,7 +119,7 @@ class PaperPrompt:
         Initializes the PaperPrompt object with the paper PDF path and a list of questions.
     """
     def __init__(self, paper_pdf_path: str, questions: List[str], max_tokens: int, answers_max_tokens: int,
-                 max_api_calls: int = 10, shrink_method: str = 'truncation'):
+                 max_api_calls: int = 10, preferred_shrink_method: str = 'truncation'):
         """
         Initializes the PaperPrompt object with the paper PDF path and a list of questions.
         """
@@ -128,12 +128,13 @@ class PaperPrompt:
         self.questions_per_api_call = None
         self.tokens_per_api_call = []
         self.paper_prompt_tokens = None
+        self.shrink_method = "None"
 
         self.max_tokens = max_tokens
         self.questions_tokens = count_tokens(" ".join(questions))
         self.answers_max_tokens = answers_max_tokens
         self.max_api_calls = max_api_calls
-        self.shrink_method = shrink_method
+        self.chosen_shrink_method = preferred_shrink_method
         self.paper_prompt = clean_text(read_pdf(paper_pdf_path))
         self.questions = questions
         self.generate_prompts()
@@ -144,7 +145,8 @@ class PaperPrompt:
         if paper_tokens > self.max_tokens:
             buffer_tokens = math.ceil(non_paper_needed_tokens / 3)
             self.number_of_api_calls = 3
-            self.paper_prompt = self.shrink(self.shrink_method, self.max_tokens - buffer_tokens)
+            self.shrink_method = self.chosen_shrink_method
+            self.paper_prompt = self.shrink(self.chosen_shrink_method, self.max_tokens - buffer_tokens)
         else:
             free_tokens = self.max_tokens - count_tokens(self.paper_prompt)
             self.number_of_api_calls = math.ceil(non_paper_needed_tokens / free_tokens)
