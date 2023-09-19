@@ -58,6 +58,11 @@ def sample_paper_devices(df: pd.DataFrame,
     return df[df["Ref_DOI_number"] == random_doi]
 
 
+def load_questions_db():
+    questions_db_path = r"data/questions/questions_db.csv"
+    return pd.read_csv(questions_db_path)
+
+
 if __name__ == '__main__':
     a = load_data('../data/db_output1.csv')
     filter_by_kpi(a)
