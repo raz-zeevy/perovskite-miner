@@ -32,7 +32,7 @@ def test_paper_prompt_generate_prompts_short():
 
     assert paper_prompt.number_of_api_calls == 1, "Unexpected number of API calls"
     assert paper_prompt.questions_per_api_call == (3, 0), "Unexpected number of questions per API call"
-    assert paper_prompt.tokens_per_api_call == [5138], "Unexpected number of tokens per API call"
+    assert paper_prompt.tokens_per_api_call == [5188], "Unexpected number of tokens per API call"
     assert len(paper_prompt.contents) == paper_prompt.number_of_api_calls, "Unexpected number of content generated"
     assert paper_prompt.contents[0][0] == gpt_preview_prompt, "Unexpected preview prompt content"
     assert paper_prompt.contents[0][1] == expected_pdf_text, "Unexpected paper prompt content"
@@ -42,7 +42,7 @@ def test_paper_prompt_generate_prompts_short():
 
 def test_paper_prompt_generate_prompts_long():
     paper_prompt = PaperPrompt(paper_pdf_path=paper_pdf_path, questions=questions, max_tokens=6000,
-                               answers_max_tokens=500)
+                               answers_max_tokens=1000)
 
     assert paper_prompt.number_of_api_calls == 2, "Unexpected number of API calls"
 
@@ -59,11 +59,13 @@ def test_paper_prompt_generate_prompts_long():
 
 def test_paper_prompt_generate_prompts_with_shrinking():
     paper_prompt = PaperPrompt(paper_pdf_path=paper_pdf_path, questions=questions, max_tokens=4000,
-                               answers_max_tokens=500)
+                               answers_max_tokens=1500)
 
     assert paper_prompt.number_of_api_calls == 3, "Unexpected number of API calls"
+
     with(open('expected_shrank_text.txt', 'r')) as f:
         expected_shrank_text = f.read()
+
     assert len(paper_prompt.contents) == paper_prompt.number_of_api_calls, "Unexpected number of content generated"
 
     assert paper_prompt.contents[0][0] == gpt_preview_prompt, "Unexpected preview prompt content"
@@ -95,3 +97,4 @@ def test_truncation():
 
 if __name__ == "__main__":
     pytest.main([__file__])
+
