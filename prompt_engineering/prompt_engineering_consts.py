@@ -5,3 +5,7 @@ materials. You will receive the full text of the paper along with questions and 
  text meticulously to identify and list down the relevant data according to the specified format. Ensure to capture key\
   details such as methodologies, findings, and any numerical data presented in the paper. Your output should be a  \
 structured list of answers adhering to the requested format. Accuracy and attention to detail are paramount.'
+
+preview_prompt_tokens = 150
+
+tokens_deviation = 100
