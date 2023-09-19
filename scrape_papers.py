@@ -10,6 +10,8 @@ Args:
     # TODO: add option to insert the chromedriver path
     chromedriver (str): path to chromedriver
     --debug (bool): debug mode
+    # TODO: add option to check that download is not currapted
+        right now there are some papers that are downloaded but are currapted
 """
 import argparse
 import os

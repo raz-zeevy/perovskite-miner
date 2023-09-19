@@ -11,9 +11,10 @@ def filter_by_kpi(df: pd.DataFrame) -> None:
 
 
 def get_kpi_fields():
-    q_df = load_data('../data/questions/questions_db.csv')
+    q_df = load_data('data/questions/questions_db.csv')
     keys = q_df[q_df[FIELD_NAME].notna()][FIELD_NAME].to_list()
     keys.remove("Ref_name_of_person_entering_the_data")
+    keys.remove("Ref_data_entered_by_author")
     return keys
 
 
@@ -56,6 +57,11 @@ def sample_paper_devices(df: pd.DataFrame,
                                 (count_ref_df <= max_num_of_of_devices)]
     random_doi = np.random.choice(count_ref_df.index)
     return df[df["Ref_DOI_number"] == random_doi]
+
+
+def load_questions_db():
+    questions_db_path = r"data/questions/questions_db.csv"
+    return pd.read_csv(questions_db_path)
 
 
 if __name__ == '__main__':
