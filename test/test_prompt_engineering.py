@@ -63,8 +63,9 @@ def test_paper_prompt_generate_prompts_with_shrinking():
 
     assert paper_prompt.number_of_api_calls == 3, "Unexpected number of API calls"
 
-    with(open('expected_shrank_text1.txt', 'r')) as f:
+    with(open('expected_shrank_text.txt', 'r')) as f:
         expected_shrank_text = f.read()
+
     assert len(paper_prompt.contents) == paper_prompt.number_of_api_calls, "Unexpected number of content generated"
 
     assert paper_prompt.contents[0][0] == gpt_preview_prompt, "Unexpected preview prompt content"
@@ -96,3 +97,4 @@ def test_truncation():
 
 if __name__ == "__main__":
     pytest.main([__file__])
+
