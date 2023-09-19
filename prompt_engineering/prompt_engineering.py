@@ -2,7 +2,8 @@ from pypdf import PdfReader
 import tiktoken
 import os
 from typing import List
-from prompt_engineering_consts import gpt_preview_prompt, preview_prompt_tokens, tokens_deviation
+from .prompt_engineering_consts import gpt_preview_prompt, \
+    preview_prompt_tokens, tokens_deviation
 import math
 
 import sys
