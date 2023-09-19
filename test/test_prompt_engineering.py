@@ -18,9 +18,17 @@ paper_pdf_path = "pdf_mock.pdf"
 expected_pdf_text = clean_text(read_pdf(paper_pdf_path))
 
 
+def test_clean_text():
+    text = read_pdf('pdf_mock.pdf')
+    cleaned_text = clean_text(text)
+    with(open('expected_clean_text.txt', 'r')) as f:
+        expected_clean_text = f.read()
+    assert cleaned_text == expected_clean_text, "Unexpected text after cleaning"
+
+
 def test_paper_prompt_generate_prompts_short():
     paper_prompt = PaperPrompt(paper_pdf_path=paper_pdf_path, questions=questions, max_tokens=15000,
-                               questions_max_tokens=2500, answers_max_tokens=500)
+                               answers_max_tokens=500)
 
     assert paper_prompt.number_of_api_calls == 1, "Unexpected number of API calls"
     assert paper_prompt.questions_per_api_call == (3, 0), "Unexpected number of questions per API call"
@@ -34,7 +42,7 @@ def test_paper_prompt_generate_prompts_short():
 
 def test_paper_prompt_generate_prompts_long():
     paper_prompt = PaperPrompt(paper_pdf_path=paper_pdf_path, questions=questions, max_tokens=6000,
-                               questions_max_tokens=1000, answers_max_tokens=500)
+                               answers_max_tokens=500)
 
     assert paper_prompt.number_of_api_calls == 2, "Unexpected number of API calls"
 
@@ -51,7 +59,7 @@ def test_paper_prompt_generate_prompts_long():
 
 def test_paper_prompt_generate_prompts_with_shrinking():
     paper_prompt = PaperPrompt(paper_pdf_path=paper_pdf_path, questions=questions, max_tokens=4000,
-                               questions_max_tokens=1000, answers_max_tokens=500)
+                               answers_max_tokens=500)
 
     assert paper_prompt.number_of_api_calls == 3, "Unexpected number of API calls"
     with(open('expected_shrank_text.txt', 'r')) as f:

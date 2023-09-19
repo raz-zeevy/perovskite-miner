@@ -43,10 +43,11 @@ def read_pdf(file_path):
 
 def clean_text(text):
     def trim_end(input_text: str, word: str):
-        for word in ['References'.capitalize(), word, word.upper()]:
+        for word in [word.capitalize(), word, word.upper()]:
             index = input_text.rfind(word)
             if index != -1:
                 return input_text[:index]
+        return input_text
 
     out_text = trim_end(text, 'references')
     out_text = trim_end(out_text, 'acknowledgements')
