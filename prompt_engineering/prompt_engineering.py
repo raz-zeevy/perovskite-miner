@@ -123,6 +123,12 @@ class PaperPrompt:
     contents : List[str]
         The content to be sent to the GPT model, a list in length of 'number_of_api_calls' where in each index we
         include the preview prompt, paper prompt, and questions prompt for one API call.
+    questions_per_api_call: int, int
+        The number of questions to be sent in each API call, and remainder questions to be sent in the last API call.
+    tokens_per_api_call: List[int]
+        The number of tokens in each API call.
+    paper_prompt_tokens: int
+        The number of tokens in the paper prompt inserted to the model.
 
     Methods
     -------
@@ -137,6 +143,9 @@ class PaperPrompt:
         """
         self.contents = None
         self.number_of_api_calls = None
+        self.questions_per_api_call = None
+        self.tokens_per_api_call = []
+        self.paper_prompt_tokens = None
 
         self.max_tokens = max_tokens
         self.questions_max_tokens = questions_max_tokens
@@ -160,14 +169,17 @@ class PaperPrompt:
 
             if self.number_of_api_calls > self.max_api_calls:
                 raise Exception("Usage: Paper requires too many API calls.")
-
+        self.paper_prompt_tokens = count_tokens(self.paper_prompt)
         questions_per_call = math.ceil(len(self.questions) / self.number_of_api_calls)
+        self.questions_per_api_call = questions_per_call, len(self.questions) % questions_per_call
 
         self.contents = []
         for i in range(0, len(self.questions), questions_per_call):
             batch_questions = self.questions[i:i + questions_per_call]
-            first_questions_prompt = " ".join(batch_questions)
-            self.contents.append([gpt_preview_prompt, self.paper_prompt, first_questions_prompt])
+            questions_prompt = " ".join(batch_questions)
+            self.contents.append([gpt_preview_prompt, self.paper_prompt, questions_prompt])
+            tokens_in_call = preview_prompt_tokens + self.paper_prompt_tokens + count_tokens(questions_prompt)
+            self.tokens_per_api_call.append(tokens_in_call)
 
     def shrink(self, shrink_method: str, tokens_for_paper=15000) -> str:
         """
