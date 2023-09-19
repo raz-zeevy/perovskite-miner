@@ -7,7 +7,7 @@ import tiktoken
 import os
 import pandas as pd
 from typing import List
-from prompt_engineering_consts import gpt_preview_prompt
+from .prompt_engineering_consts import gpt_preview_prompt
 import math
 
 
@@ -92,7 +92,8 @@ class PaperPrompt:
 
     # add file prompt analysis
 
-    def __init__(self, paper_pdf_path: str, questions: List[str], max_tokens: int):
+    def __init__(self, paper_pdf_path: str, questions: List[str],
+                 max_tokens: int):
         """
         Initializes the PaperPrompt object with the paper PDF path and a list of questions.
         """
