@@ -1,9 +1,8 @@
 from pypdf import PdfReader
 import tiktoken
 import os
-import pandas as pd
 from typing import List
-from prompt_engineering_consts import gpt_preview_prompt, preview_prompt_tokens
+from prompt_engineering_consts import gpt_preview_prompt, preview_prompt_tokens, tokens_deviation
 import math
 
 import sys
@@ -42,31 +41,15 @@ def read_pdf(file_path):
 
 
 def clean_text(text):
-    out_text = text
-    for word in ['References', 'references', 'References'.upper()]:
-        index = text.rfind(word)
-        if index != -1:
-            out_text = text[:index]
-            break
+    def trim_end(input_text: str, word: str):
+        for word in ['References'.capitalize(), word, word.upper()]:
+            index = input_text.rfind(word)
+            if index != -1:
+                return input_text[:index]
 
-    for word in ['acknowledgements', 'acknowledgements'.upper(), 'Acknowledgements']:
-        index = text.rfind(word)
-        if index != -1:
-            out_text = text[:index]
-            break
-
+    out_text = trim_end(text, 'references')
+    out_text = trim_end(out_text, 'acknowledgements')
     return out_text
-
-
-def create_text_from_questions_table():
-    questions_pd = pd.read_csv('../data/questions/questions_db.csv')
-    questions_pd = questions_pd[questions_pd['field_name'].notna()]['gpt_question']
-    print(len(questions_pd))
-    questions_output = ''
-    for row in questions_pd.values:
-        questions_output += row
-        questions_output += ','
-    return questions_output[:-1]
 
 
 def truncation(input_text, tokens_for_paper=15000) -> str:
@@ -76,7 +59,6 @@ def truncation(input_text, tokens_for_paper=15000) -> str:
     We assume that token is about 0.75 of a word and deviate from the 'tokens_for_paper' by 100 tokens.
     :return: trimmed paper text.
     """
-    tokens_deviation = 100
     words = input_text.split()
     words_amount = tokens_to_words_count(tokens_amount=tokens_for_paper)
     shortened_text = ' '.join(words[:words_amount])

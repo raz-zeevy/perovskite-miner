@@ -7,3 +7,5 @@ materials. You will receive the full text of the paper along with questions and 
 structured list of answers adhering to the requested format. Accuracy and attention to detail are paramount.'
 
 preview_prompt_tokens = 150
+
+tokens_deviation = 100
