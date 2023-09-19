@@ -23,7 +23,8 @@ def test_paper_prompt_generate_prompts_short():
                                questions_max_tokens=2500, answers_max_tokens=500)
 
     assert paper_prompt.number_of_api_calls == 1, "Unexpected number of API calls"
-
+    assert paper_prompt.questions_per_api_call == (3, 0), "Unexpected number of questions per API call"
+    assert paper_prompt.tokens_per_api_call == [5138], "Unexpected number of tokens per API call"
     assert len(paper_prompt.contents) == paper_prompt.number_of_api_calls, "Unexpected number of content generated"
     assert paper_prompt.contents[0][0] == gpt_preview_prompt, "Unexpected preview prompt content"
     assert paper_prompt.contents[0][1] == expected_pdf_text, "Unexpected paper prompt content"
