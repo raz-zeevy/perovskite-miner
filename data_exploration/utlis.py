@@ -11,9 +11,10 @@ def filter_by_kpi(df: pd.DataFrame) -> None:
 
 
 def get_kpi_fields():
-    q_df = load_data('../data/questions/questions_db.csv')
+    q_df = load_data('data/questions/questions_db.csv')
     keys = q_df[q_df[FIELD_NAME].notna()][FIELD_NAME].to_list()
     keys.remove("Ref_name_of_person_entering_the_data")
+    keys.remove("Ref_data_entered_by_author")
     return keys
 
 
