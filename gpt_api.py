@@ -1,7 +1,7 @@
 import requests
 import json
 import pandas as pd
-import const
+import questions_const
 from config import OPEN_AI_KEY
 import openai
 

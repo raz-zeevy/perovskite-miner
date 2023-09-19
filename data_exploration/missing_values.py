@@ -7,7 +7,7 @@ def plot_fields(sorted_df,max_length=10, percentile = 0.05):
     Parameters:
     - most_important_df: *Sorted* DataFrame to plot.
     - max_length: Maximum length for x-axis labels. Default is 10.
-    - precentile: The percentile to use to divide to two groups
+    - percentile: The percentile to use to divide to two groups
     """
     import plotly.express as px
     import plotly.graph_objects as go

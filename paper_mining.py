@@ -1,8 +1,7 @@
 from typing import List, Tuple
 import pandas as pd
-from numpy import ndarray
 from pandas import DataFrame
-import const
+from questions_const import FIELD_NAME, PROTOCOL_QUESTION, QID, GPT_QUESTION
 from gpt_api import access_chat_gpt_3
 
 
@@ -14,17 +13,20 @@ def gpt_fill(paper_pdf_path, fields=None, questions=None, qids=None) -> \
     questions_db_path = r"data/questions/questions_db.csv"
     q_df = pd.read_csv(questions_db_path)
     # filter data according to given filters
-    q_df = q_df[q_df[const.FIELD_NAME].notna()]
-    for filter, values in {const.FIELD_NAME: fields,
-                           const.PROTOCOL_QUESTION: questions,
-                           const.QID: qids}.items():
+    q_df = q_df[q_df[FIELD_NAME].notna()]
+    for filter, values in {FIELD_NAME: fields,
+                           PROTOCOL_QUESTION: questions,
+                           QID: qids}.items():
         if values:
             q_df = q_df[q_df[filter].isin(values)]
-    prompts = generate_prompts(paper_pdf_path, q_df[const.GPT_QUESTION].values)
-    res = access_chat_gpt_3(prompts)
+    # TODO: make the psuedo code work
+    # prompts = generate_prompts(paper_pdf_path, q_df[GPT_QUESTION].values)
+    p_prompts = PaperPrompt(paper_pdf_path, q_df[GPT_QUESTION].values)
+    for i in range(p_prompts.num_of_api_calls):
+        res = access_chat_gpt_3(p_prompts.contents[i])
     # Structure the results
     res = res.split("\n")
-    res_df = pd.DataFrame(columns=q_df[const.FIELD_NAME].values)
+    res_df = pd.DataFrame(columns=q_df[FIELD_NAME].values)
     res_df.append(res, ignore_index=True)
     return res_df
 

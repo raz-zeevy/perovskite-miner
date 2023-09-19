@@ -2,12 +2,9 @@ import numpy as np
 import pandas as pd
 import openpyxl
 import jellyfish
-import const
+from questions_const import *
 
 output_path = "../data/questions/questions_db.csv"
-
-
-
 
 def format_questions_and_save_5_4(
         protocol_path='Extraction protocolls version 5_4.xlsx',
@@ -53,9 +50,8 @@ def load_questions_from_txt(questions_path):
             questions.append(line.strip())
     return questions
 
-
 def question_to_field(question: str):
-    return const.best_5p_question_to_field.get(question)
+    return best_5p_question_to_field.get(question)
 
 
 def infer_field_from_question(question: str) -> (int, str):
