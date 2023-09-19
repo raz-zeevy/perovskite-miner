@@ -48,8 +48,13 @@ def gpt_fill(paper_pdf_path, fields=None, questions=None, qids=None,
                            QID: qids}.items():
         if values:
             q_df = q_df[q_df[filter].isin(values)]
-    p_prompts = PaperPrompt(paper_pdf_path, q_df[GPT_QUESTION].values,
-                            int(1.6e4))
+    p_prompts = PaperPrompt(paper_pdf_path = paper_pdf_path,
+                            questions = q_df[GPT_QUESTION].values,
+                            max_tokens = int(1.6e4),
+                            answers_max_tokens = 500,
+                            questions_max_tokens = 2300,
+                            shrink_method = "trunkation",
+                            max_api_calls = 10)
     res = post_paper_prompt(p_prompts, fake=fake)
     log_gpt_results(p_prompts, res, paper_pdf_path, 0, q_df[FIELD_NAME].
                     values)
