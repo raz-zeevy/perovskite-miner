@@ -1,5 +1,20 @@
 import pandas as pd
 import numpy as np
+from questions_const import *
+
+
+def filter_by_kpi(df: pd.DataFrame) -> None:
+    kpi_fields = get_kpi_fields()
+    for col in df.columns:
+        if col not in kpi_fields:
+            df.drop(columns=col, inplace=True)  # Select columns in-place
+
+
+def get_kpi_fields():
+    q_df = load_data('../data/questions/questions_db.csv')
+    keys = q_df[q_df[FIELD_NAME].notna()][FIELD_NAME].to_list()
+    keys.remove("Ref_name_of_person_entering_the_data")
+    return keys
 
 
 def load_data(db_path):
@@ -24,6 +39,7 @@ def sample_disjoint_devices(df: pd.DataFrame, n=1):
         indices.append(np.random.choice(df[df['Ref_DOI_number'] == doi].index))
     return df.loc[indices]
 
+
 def sample_paper_devices(df: pd.DataFrame,
                          min_num_of_of_devices=-np.inf,
                          max_num_of_of_devices=np.inf):
@@ -40,3 +56,8 @@ def sample_paper_devices(df: pd.DataFrame,
                                 (count_ref_df <= max_num_of_of_devices)]
     random_doi = np.random.choice(count_ref_df.index)
     return df[df["Ref_DOI_number"] == random_doi]
+
+
+if __name__ == '__main__':
+    a = load_data('../data/db_output1.csv')
+    filter_by_kpi(a)
