@@ -2,9 +2,9 @@ from pypdf import PdfReader
 import tiktoken
 import os
 from typing import List
-from prompt_engineering_consts import gpt_preview_prompt, preview_prompt_tokens, tokens_deviation
+from .prompt_engineering_consts import gpt_preview_prompt, \
+    preview_prompt_tokens, tokens_deviation
 import math
-
 import sys
 sys.path.insert(0, '../data_exploration')
 
@@ -118,7 +118,8 @@ class PaperPrompt:
         Initializes the PaperPrompt object with the paper PDF path and a list of questions.
     """
     def __init__(self, paper_pdf_path: str, questions: List[str],
-                 max_tokens: int, questions_max_tokens: int, answers_max_tokens: int,
+                 max_tokens: int, questions_max_tokens: int,
+                 answers_max_tokens: int,
                  max_api_calls: int = 10, shrink_method: str = 'truncation'):
         """
         Initializes the PaperPrompt object with the paper PDF path and a list of questions.
