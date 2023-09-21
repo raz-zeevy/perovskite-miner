@@ -1,13 +1,8 @@
-import requests
-import json
-import pandas as pd
-import questions_const
 from config import OPEN_AI_KEY
 import openai
 
-model_4 = 'gpt-3.5-turbo'
-model_16 = 'gpt-3.5-turbo-16k'
-
+MODEL_4 = 'gpt-3.5-turbo'
+MODEL_16 = 'gpt-3.5-turbo-16k'
 
 def post_paper_prompt(p_prompts, fake=False):
     from prompt_engineering.prompt_engineering import PaperPrompt
@@ -33,9 +28,11 @@ def access_chat_gpt_3(prompts_text: [],
     prompts = [dict(role="user",
                     content=txt) for txt in prompts_text]
     chat_completion = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-16k",
+        model=MODEL_16,
         messages=prompts)
     res = chat_completion.choices[0].message.content
+    # check the chat_completion.usage to check for overloads and actual
+    # tokens size
     return res
 
 

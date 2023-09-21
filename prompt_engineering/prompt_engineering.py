@@ -5,11 +5,14 @@ from typing import List
 from .prompt_engineering_consts import gpt_preview_prompt, \
     preview_prompt_tokens, tokens_deviation
 import math
-
 import sys
 sys.path.insert(0, '../data_exploration')
 
 
+# todo: to get this function from user since it is different for each model
+#   for example this function works only for open-ai models even if the name
+#   is changed
+# todo: move this specific function to gpt_API
 def count_tokens(input_text):
     encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
     token_count = len(encoding.encode(input_text))

@@ -2,9 +2,10 @@ from pandas import DataFrame
 from gpt_api import post_paper_prompt
 from prompt_engineering.prompt_engineering import PaperPrompt
 import datetime
-from data_exploration.utlis import *
+from data_exploration.utils import *
 import os
 import json
+
 
 def log_gpt_results_json(p_prompt: PaperPrompt, res, pdf_path,
                          accuracy, fields) -> None:
@@ -25,7 +26,7 @@ def log_gpt_results_json(p_prompt: PaperPrompt, res, pdf_path,
         "Questions count": len(p_prompt.questions),
         "Questions per API call": p_prompt.questions_per_api_call,
         "Tokens per API call": p_prompt.tokens_per_api_call,
-        "Paper Length": p_prompt.paper_prompt_tokens,
+        "Paper Length (tokens)": p_prompt.paper_prompt_tokens,
         "Response Accuracy": f"{accuracy:.2f}%",
         "Prompt": p_prompt.contents[0][0],
         "Response": res,
