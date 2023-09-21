@@ -1,0 +1,16 @@
+Could not read file '10.1039_c8ta05026k.pdf' due to: Stream has ended unexpectedly
+Could not read file '10.1039_c7se00536a.pdf' due to: Stream has ended unexpectedly
+Could not read file '10.1039_c4ta05675b.pdf' due to: Invalid Elementary Object starting with b',' @2186509: b'CIub`c4&1RX`,LB?+,[\n,l[iKQK.T~>\nEI Q\nq 478 0 0 1 1810 2557 cm\nBI\n/CS/RGB\n/W 478\n'
+Could not read file '10.1002_aenm.201800568.pdf' due to: Stream has ended unexpectedly
+Could not read file '10.1002_adma.201906995.pdf' due to: Stream has ended unexpectedly
+Could not read file '10.1002_aenm.201802995.pdf' due to: Stream has ended unexpectedly
+Could not read file '10.1007_s40820-020-0379-5.pdf' due to: Stream has ended unexpectedly
+Could not read file '10.1002_aenm.201903653.pdf' due to: Stream has ended unexpectedly
+Could not read file '10.1039_c5cp03934g.pdf' due to: argument of type 'NumberObject' is not iterable
+Could not read file '10.1039_c5ta06813d.pdf' due to: Invalid Elementary Object starting with b',' @639710: b'P(&5W@<WcFUCNsQ8A::\n,<3uO?G3A6UB>$t8P.aLFc2`YS%K".!3;)Kqu~>\nEI Q\nq 740 0 0 1 131'
+Could not read file '10.1021_nn404323g.pdf' due to: 'NoneType' object is not subscriptable
+Could not read file '10.1002_aenm.201800758.pdf' due to: Stream has ended unexpectedly
+Could not read file '10.1002_aenm.201903751.pdf' due to: Stream has ended unexpectedly
+Could not read file '10.1039_c5nr07739g.pdf' due to: Invalid Elementary Object starting with b']' @196173: b'.?j\\<J6"EJ-ucEI\nQmOW](CAStOe*^-MHg"@2leg=@d`m.DiUAT-qBnl*bmpE5):Z~>\nEI Q\nq 758 0'
+Could not read file '10.1039_c7tc04899h.pdf' due to: Stream has ended unexpectedly
+Could not read file '10.1039_c5ta08015k.pdf' due to: Stream has ended unexpectedly
