@@ -1,39 +1,11 @@
 from pypdf import PdfReader
-import tiktoken
-import os
 from typing import List
 from .prompt_engineering_consts import gpt_preview_prompt, \
     preview_prompt_tokens, tokens_deviation
+from gpt_api import openai_count_tokens
 import math
 import sys
 sys.path.insert(0, '../data_exploration')
-
-
-# todo: to get this function from user since it is different for each model
-#   for example this function works only for open-ai models even if the name
-#   is changed
-# todo: move this specific function to gpt_API
-def count_tokens(input_text):
-    encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
-    token_count = len(encoding.encode(input_text))
-    return token_count
-
-
-def calculate_mean(token_counts):
-    if token_counts:
-        return sum(token_counts) / len(token_counts)
-    else:
-        return 0
-
-
-def calculate_std(token_counts):
-    if not token_counts:
-        return 0
-
-    mean = calculate_mean(token_counts)
-    variance = sum((x - mean) ** 2 for x in token_counts) / len(token_counts)
-    std_dev = math.sqrt(variance)
-    return std_dev
 
 
 def read_pdf(file_path):
@@ -57,7 +29,7 @@ def clean_text(text):
     return out_text
 
 
-def truncation(input_text, tokens_for_paper=15000) -> str:
+def truncation(input_text, tokens_for_paper=15000, count_tokens=openai_count_tokens) -> str:
     """
     In this method we heuristically take the most tokens we can get from
     the begging of the paper that would fit in 3 API calls.
@@ -123,7 +95,8 @@ class PaperPrompt:
         Initializes the PaperPrompt object with the paper PDF path and a list of questions.
     """
     def __init__(self, paper_pdf_path: str, questions: List[str], max_tokens: int, answers_max_tokens: int,
-                 max_api_calls: int = 10, preferred_shrink_method: str = 'truncation'):
+                 max_api_calls: int = 10, preferred_shrink_method: str = 'truncation',
+                 count_tokens=openai_count_tokens):
         """
         Initializes the PaperPrompt object with the paper PDF path and a list of questions.
         """
@@ -141,10 +114,11 @@ class PaperPrompt:
         self.chosen_shrink_method = preferred_shrink_method
         self.paper_prompt = clean_text(read_pdf(paper_pdf_path))
         self.questions = questions
+        self.count_tokens = count_tokens
         self.generate_prompts()
 
     def generate_prompts(self):
-        paper_tokens = count_tokens(self.paper_prompt)
+        paper_tokens = self.count_tokens(self.paper_prompt)
         non_paper_needed_tokens = self.questions_tokens + self.answers_max_tokens + preview_prompt_tokens
         if paper_tokens > self.max_tokens:
             buffer_tokens = math.ceil(non_paper_needed_tokens / 3)
@@ -152,12 +126,12 @@ class PaperPrompt:
             self.shrink_method = self.chosen_shrink_method
             self.paper_prompt = self.shrink(self.chosen_shrink_method, self.max_tokens - buffer_tokens)
         else:
-            free_tokens = self.max_tokens - count_tokens(self.paper_prompt)
+            free_tokens = self.max_tokens - self.count_tokens(self.paper_prompt)
             self.number_of_api_calls = math.ceil(non_paper_needed_tokens / free_tokens)
 
             if self.number_of_api_calls > self.max_api_calls:
                 raise Exception("Usage: Paper requires too many API calls.")
-        self.paper_prompt_tokens = count_tokens(self.paper_prompt)
+        self.paper_prompt_tokens = self.count_tokens(self.paper_prompt)
         questions_per_call = math.ceil(len(self.questions) / self.number_of_api_calls)
         self.questions_per_api_call = questions_per_call, len(self.questions) % questions_per_call
 
@@ -166,7 +140,7 @@ class PaperPrompt:
             batch_questions = self.questions[i:i + questions_per_call]
             questions_prompt = " ".join(batch_questions)
             self.contents.append([gpt_preview_prompt, self.paper_prompt, questions_prompt])
-            tokens_in_call = preview_prompt_tokens + self.paper_prompt_tokens + count_tokens(questions_prompt)
+            tokens_in_call = preview_prompt_tokens + self.paper_prompt_tokens + self.count_tokens(questions_prompt)
             self.tokens_per_api_call.append(tokens_in_call)
 
     def shrink(self, shrink_method: str, tokens_for_paper=15000) -> str:
@@ -185,33 +159,3 @@ class PaperPrompt:
             raise Exception("Usage: shrink method not supported, please choose one of the following: [truncation, " +
                             "summarization, fragmentation, aggressive_trimming]")
 
-
-def rows_to_strings(df):
-    return df.apply(lambda row: ' '.join(row.astype(str)), axis=1)
-
-
-def main(directory_path):
-    token_counts = []
-    clean_token_count = []
-    for root, dirs, files in os.walk(directory_path):
-        for file in files:
-            if file.endswith(".pdf"):
-                file_path = os.path.join(root, file)
-                try:
-                    text = read_pdf(file_path)
-                    token_counts.append(count_tokens(text))
-                    cleaned_text = clean_text(text)
-                    clean_token_count.append(count_tokens(cleaned_text))
-                except Exception as e:
-                    print(f"Could not read file '{file}' due to: {str(e)}")
-
-    mean_token_count = calculate_mean(token_counts)
-    mean_clean_token_count = calculate_mean(clean_token_count)
-
-    std_token_count = calculate_std(token_counts)
-    std_clean_token_count = calculate_std(clean_token_count)
-
-    print(f"The mean number of tokens across all PDFs is: {mean_token_count}")
-    print(f"The mean number of tokens across all clean PDFs is: {mean_clean_token_count}")
-    print(f"The standard deviation of tokens across all PDFs is: {std_token_count}")
-    print(f"The standard deviation of tokens across all clean PDFs is: {std_clean_token_count}")
