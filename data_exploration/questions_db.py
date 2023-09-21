@@ -1,10 +1,9 @@
-import numpy as np
 import pandas as pd
-import openpyxl
 import jellyfish
-from questions_const import *
+from data_exploration.questions_const import *
+from utils import load_data
 
-output_path = "../data/questions/questions_db.csv"
+DB_PATH = "../data/questions/questions_db.csv"
 
 def format_questions_and_save_5_4(
         protocol_path='Extraction protocolls version 5_4.xlsx',
@@ -66,9 +65,19 @@ def infer_field_from_question(question: str) -> (int, str):
             return i, field
 
 
-def create_questions_data(output_path: str) -> None:
-    protocol_path = r'C:\Users\Raz_Z\Projects\perovskite-miner\data' \
-                    r'\questions\Extraction protocolls version 5_4.xlsx'
+def counted_tokens_data(questions_df : pd.DataFrame) -> pd.DataFrame:
+    from prompt_engineering.prompt_engineering import count_tokens
+    pervo_df = load_data()
+    tokens_per_field = pervo_df.applymap(lambda x : count_tokens(str(
+        x))).mean().rename_axis(FIELD_NAME).reset_index().round(1)
+    merged = pd.merge(questions_df, tokens_per_field, on=FIELD_NAME,
+                      how='left').rename(columns={0: TOKENS_PER_ANSWER})
+    merged[TOKENS_PER_QUESTIONS] = merged[GPT_QUESTION].apply(
+        lambda x: count_tokens(x))
+    return merged
+
+def create_questions_db(output_path: str) -> None:
+    protocol_path = r'../data/questions/Extraction protocolls version 5_4.xlsx'
     sheet_name = 'Master'
     df = pd.read_excel(protocol_path, sheet_name=sheet_name)
     df.reset_index(inplace=True)
@@ -82,9 +91,9 @@ def create_questions_data(output_path: str) -> None:
         lambda question: question_to_field(question))
     df = df[[QID, PROTOCOL_QUESTION, FIELD_NAME, GPT_QUESTION,
              EXAMPLE_ANSWER]]
+    df = counted_tokens_data(df)
     df.to_csv(output_path, index=False)
 
 
 if __name__ == '__main__':
-    output_path = "../data/questions/questions_db.csv"
-    create_questions_data(output_path=output_path)
+    create_questions_db(output_path=DB_PATH)

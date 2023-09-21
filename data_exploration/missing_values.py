@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from data_exploration.utlis import *
+from data_exploration.utils import *
 
 def plot_fields(sorted_df,max_length=10, percentile = 0.05):
     """

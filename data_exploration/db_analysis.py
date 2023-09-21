@@ -1,4 +1,4 @@
-from data_exploration.utlis import load_data
+from data_exploration.utils import load_data
 import plotly.express as px
 
 def plot_devices_per_paper():
