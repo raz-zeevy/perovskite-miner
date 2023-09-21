@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
-from data_exploration.questions_const import *
+import math
+from questions_const import *
 
 
 def filter_by_kpi(df: pd.DataFrame) -> None:
@@ -18,7 +19,7 @@ def get_kpi_fields():
     return keys
 
 
-def load_data(db_path='../data/Perovskite_database_content_all_data.csv'):
+def load_data(db_path):
     df = pd.read_csv(db_path, low_memory=False)
     df.replace("Unknown", np.nan, inplace=True)
     return df
@@ -61,10 +62,25 @@ def sample_paper_devices(df: pd.DataFrame,
 
 def load_questions_db():
     questions_db_path = r"data/questions/questions_db.csv"
-    try:
-        return pd.read_csv(questions_db_path)
-    except FileNotFoundError:
-        return pd.read_csv("../"+questions_db_path)
+    return pd.read_csv(questions_db_path)
+
+
+def calculate_mean(token_counts):
+    if token_counts:
+        return sum(token_counts) / len(token_counts)
+    else:
+        return 0
+
+
+def calculate_std(token_counts):
+    if not token_counts:
+        return 0
+
+    mean = calculate_mean(token_counts)
+    variance = sum((x - mean) ** 2 for x in token_counts) / len(token_counts)
+    std_dev = math.sqrt(variance)
+    return std_dev
+
 
 if __name__ == '__main__':
     a = load_data('../data/db_output1.csv')
