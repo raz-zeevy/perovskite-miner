@@ -1,6 +1,6 @@
 import pytest
 
-from prompt_engineering.prompt_engineering_consts import gpt_preview_prompt
+from prompt_engineering.prompt_engineering_consts import preview_prompt
 
 from prompt_engineering.prompt_engineering import (
     read_pdf,
@@ -40,7 +40,7 @@ def test_paper_prompt_generate_prompts_short():
     assert paper_prompt.questions_per_api_call == (3, 0), "Unexpected number of questions per API call"
     assert paper_prompt.tokens_per_api_call == [5188], "Unexpected number of tokens per API call"
     assert len(paper_prompt.contents) == paper_prompt.number_of_api_calls, "Unexpected number of content generated"
-    assert paper_prompt.contents[0][0] == gpt_preview_prompt, "Unexpected preview prompt content"
+    assert paper_prompt.contents[0][0] == preview_prompt, "Unexpected preview prompt content"
     assert paper_prompt.contents[0][1] == expected_pdf_text, "Unexpected paper prompt content"
     assert paper_prompt.contents[0][2] == 'What is the meaning of life? Can you summarize the methodology? ' \
                                           'This is a question?', "Unexpected questions prompt content"
@@ -53,12 +53,12 @@ def test_paper_prompt_generate_prompts_long():
     assert paper_prompt.number_of_api_calls == 2, "Unexpected number of API calls"
 
     assert len(paper_prompt.contents) == paper_prompt.number_of_api_calls, "Unexpected number of content generated"
-    assert paper_prompt.contents[0][0] == gpt_preview_prompt, "Unexpected preview prompt content"
+    assert paper_prompt.contents[0][0] == preview_prompt, "Unexpected preview prompt content"
     assert paper_prompt.contents[0][1] == expected_pdf_text, "Unexpected paper prompt content"
     assert paper_prompt.contents[0][2] == "What is the meaning of life? Can you summarize the methodology?", \
         "Unexpected questions prompt content"
 
-    assert paper_prompt.contents[1][0] == gpt_preview_prompt, "Unexpected preview prompt content"
+    assert paper_prompt.contents[1][0] == preview_prompt, "Unexpected preview prompt content"
     assert paper_prompt.contents[1][1] == paper_prompt.contents[0][1], "Unexpected paper prompt content"
     assert paper_prompt.contents[1][2] == "This is a question?", "Unexpected questions prompt content"
 
@@ -74,17 +74,17 @@ def test_paper_prompt_generate_prompts_with_shrinking():
 
     assert len(paper_prompt.contents) == paper_prompt.number_of_api_calls, "Unexpected number of content generated"
 
-    assert paper_prompt.contents[0][0] == gpt_preview_prompt, "Unexpected preview prompt content"
+    assert paper_prompt.contents[0][0] == preview_prompt, "Unexpected preview prompt content"
     assert paper_prompt.contents[0][1] == expected_shrank_text, "Unexpected paper prompt content"
     assert paper_prompt.contents[0][2] == "What is the meaning of life?", "Unexpected questions prompt content"
 
     assert len(paper_prompt.contents) == paper_prompt.number_of_api_calls, "Unexpected number of content generated"
-    assert paper_prompt.contents[1][0] == gpt_preview_prompt, "Unexpected preview prompt content"
+    assert paper_prompt.contents[1][0] == preview_prompt, "Unexpected preview prompt content"
     assert paper_prompt.contents[1][1] == expected_shrank_text, "Unexpected paper prompt content"
     assert paper_prompt.contents[1][2] == "Can you summarize the methodology?", "Unexpected questions prompt content"
 
     assert len(paper_prompt.contents) == paper_prompt.number_of_api_calls, "Unexpected number of content generated"
-    assert paper_prompt.contents[2][0] == gpt_preview_prompt, "Unexpected preview prompt content"
+    assert paper_prompt.contents[2][0] == preview_prompt, "Unexpected preview prompt content"
     assert paper_prompt.contents[2][1] == expected_shrank_text, "Unexpected paper prompt content"
     assert paper_prompt.contents[2][2] == "This is a question?", "Unexpected questions prompt content"
 
