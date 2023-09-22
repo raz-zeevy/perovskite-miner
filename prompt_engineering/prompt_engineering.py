@@ -1,7 +1,6 @@
 from pypdf import PdfReader
 from typing import List
-from .prompt_engineering_consts import gpt_preview_prompt, \
-    preview_prompt_tokens, tokens_deviation
+from .prompt_engineering_consts import preview_prompt, preview_prompt_tokens, tokens_deviation
 from gpt_api import openai_count_tokens
 import math
 import sys
@@ -142,7 +141,7 @@ class PaperPrompt:
         for i in range(0, len(self.questions), questions_per_call):
             batch_questions = self.questions[i:i + questions_per_call]
             questions_prompt = " ".join(batch_questions)
-            self.contents.append([gpt_preview_prompt, self.paper_prompt, questions_prompt])
+            self.contents.append([preview_prompt, self.paper_prompt, questions_prompt])
             tokens_in_call = preview_prompt_tokens + self.paper_prompt_tokens + self.count_tokens(questions_prompt)
             self.tokens_per_api_call.append(tokens_in_call)
 

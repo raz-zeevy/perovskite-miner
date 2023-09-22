@@ -1,6 +1,6 @@
 
-from prompt_engineering.prompt_engineering import count_tokens
-from prompt_engineering.prompt_engineering_consts import gpt_preview_prompt
+from prompt_engineering.prompt_engineering import openai_count_tokens as count_tokens
+from prompt_engineering.prompt_engineering_consts import preview_prompt
 
 from utlis import load_data, calculate_mean, calculate_std
 
@@ -29,8 +29,8 @@ def calculate_answer_stats():
     print(f"The mean number of tokens across all answers is: {int(mean_token_count)} [{int(std_token_count)}]")
 
 
-def calculate_gpt_preview_stats():
-    print("Tokens amount for gpt_preview_prompt: " + str(count_tokens(gpt_preview_prompt)))
+def calculate_preview_stats():
+    print("Tokens amount for preview_prompt: " + str(count_tokens(preview_prompt)))
 
 
 def rows_to_strings(df):
@@ -38,7 +38,7 @@ def rows_to_strings(df):
 
 
 if __name__ == '__main__':
-    calculate_gpt_preview_stats()
+    calculate_preview_stats()
     calculate_question_stats()
     calculate_answer_stats()
 
