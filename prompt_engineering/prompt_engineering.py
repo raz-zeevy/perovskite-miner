@@ -9,10 +9,13 @@ sys.path.insert(0, '../data_exploration')
 
 
 def read_pdf(file_path):
-    reader = PdfReader(file_path)
-    text = ""
-    for page in reader.pages:
-        text += page.extract_text() + "\n"
+    try:
+        reader = PdfReader(file_path)
+        text = ""
+        for page in reader.pages:
+            text += page.extract_text() + "\n"
+    except Exception as e:
+        raise Exception(f"Could not open pdf file '{file_path}' due to: {str(e)}")
     return text
 
 
