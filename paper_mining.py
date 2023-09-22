@@ -61,7 +61,7 @@ def gpt_fill(paper_pdf_path, fields=None, questions=None, qids=None,
                             questions=q_df[GPT_QUESTION].values,
                             max_tokens=int(1.6e4),
                             answers_max_tokens=500,
-                            shrink_method="truncation",
+                            preferred_shrink_method="truncation",
                             max_api_calls=10)
     res = post_paper_prompt(p_prompts, fake=fake)
     log_gpt_results_json(p_prompts, res, paper_pdf_path, 0, q_df[FIELD_NAME].
@@ -69,18 +69,19 @@ def gpt_fill(paper_pdf_path, fields=None, questions=None, qids=None,
     # check if results are unsuccessful
     if ":" not in res:
         return res
-    return results_to_df(res, columns=q_df[FIELD_NAME].to_list())
+    return results_to_df(res, kpi_columns=q_df[FIELD_NAME].to_list())
 
-
-def results_to_df(res, columns: list):
+def results_to_df(res, kpi_columns: list):
     res = res.strip()
     res_rows = [row for row in res.split("\n") if row]
     api_cols = [value.split(":")[0] for value in res_rows]
     values = [value.split(":")[1] for value in res_rows]
-    res_df = pd.DataFrame(columns=columns)
+    res_df = pd.DataFrame(columns=kpi_columns)
+    # make kpi_columns as long as api_cols, pad with None
+    kpi_columns = kpi_columns + [None] * (len(api_cols) - len(kpi_columns))
     # Create dictionaries for column names and values
-    api_cols_dict = {columns[i]: api_cols[i] for i in range(len(api_cols))}
-    values_dict = {columns[i]: values[i] for i in range(len(values))}
+    api_cols_dict = {kpi_columns[i]: api_cols[i] for i in range(len(api_cols))}
+    values_dict = {kpi_columns[i]: values[i] for i in range(len(values))}
     # append rows
     res_df = res_df.append(api_cols_dict, ignore_index=True)
     res_df = res_df.append(values_dict, ignore_index=True)
@@ -97,7 +98,19 @@ def mine_paper(paper_pdf_path, fake=False):
     if isinstance(y_pred, DataFrame):
         y_pred.to_csv(output_name(paper_pdf_path), index=False)
 
+def mine_paper_by_doi(paper_doi, fake=True):
+    from scraper.scrape_papers import sanitize
+    download_folder = "data/papers/downloads"
+    pdf_name = sanitize(paper_doi) + ".pdf"
+    pdf_path = os.path.join(download_folder, pdf_name)
+    mine_paper(pdf_path, fake=fake)
 
 if __name__ == '__main__':
-    paper_pdf_path = r"data/papers/downloads/10.1002_adem.201900288.pdf"
-    mine_paper(paper_pdf_path, fake=True)
+    # paper_pdf_path = r"data/papers/downloads/10.1002_adem.201900288.pdf"
+    # mine_paper(paper_pdf_path, fake=True)
+    # from data_exploration.utils import sample_paper_by_devices
+    # paper_doi = sample_paper_by_devices(min_num_of_of_devices=1,
+    #                                     max_num_of_of_devices=1)[
+        # 'Ref_DOI_number'].values[0]
+    paper_doi = '10.1021/acs.jpcc.8b01121'
+    mine_paper_by_doi(paper_doi, fake=False)

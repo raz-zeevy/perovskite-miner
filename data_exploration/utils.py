@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 from data_exploration.questions_const import *
 
-
 def filter_by_kpi(df: pd.DataFrame) -> None:
     kpi_fields = get_kpi_fields()
     for col in df.columns:
@@ -11,15 +10,18 @@ def filter_by_kpi(df: pd.DataFrame) -> None:
 
 
 def get_kpi_fields():
-    q_df = load_data('data/questions/questions_db.csv')
+    q_df = load_pervo_data('data/questions/questions_db.csv')
     keys = q_df[q_df[FIELD_NAME].notna()][FIELD_NAME].to_list()
     keys.remove("Ref_name_of_person_entering_the_data")
     keys.remove("Ref_data_entered_by_author")
     return keys
 
 
-def load_data(db_path='../data/Perovskite_database_content_all_data.csv'):
-    df = pd.read_csv(db_path, low_memory=False)
+def load_pervo_data(db_path='data/Perovskite_database_content_all_data.csv'):
+    try:
+        df = pd.read_csv(db_path, low_memory=False)
+    except FileNotFoundError:
+        df = pd.read_csv('../' + db_path, low_memory=False)
     df.replace("Unknown", np.nan, inplace=True)
     return df
 
@@ -27,8 +29,8 @@ def load_data(db_path='../data/Perovskite_database_content_all_data.csv'):
 # todo finish this function
 def sample_disjoint_devices(df: pd.DataFrame, n=1):
     """
-    Sample n random devices from the database that are taken from different
-    devices.
+    Sample n random entries (devices) from the database that are taken from
+    different papers.
     :param df:
     :param n:
     :return:
@@ -41,17 +43,19 @@ def sample_disjoint_devices(df: pd.DataFrame, n=1):
     return df.loc[indices]
 
 
-def sample_paper_devices(df: pd.DataFrame,
-                         min_num_of_of_devices=-np.inf,
-                         max_num_of_of_devices=np.inf):
+def sample_paper_by_devices(df: pd.DataFrame = None,
+                            min_num_of_of_devices=-np.inf,
+                            max_num_of_of_devices=np.inf):
     """
     Sample a random paper from the database that has a certain number of
-    references
+    references (devices)
     :param df:
     :param min_num_of_of_devices:
     :param max_num_of_of_devices:
     :return:
     """
+    if df is None:
+        df = load_pervo_data()
     count_ref_df = df.groupby("Ref_DOI_number")['Ref_ID'].count()
     count_ref_df = count_ref_df[(count_ref_df >= min_num_of_of_devices) &
                                 (count_ref_df <= max_num_of_of_devices)]
@@ -64,8 +68,9 @@ def load_questions_db():
     try:
         return pd.read_csv(questions_db_path)
     except FileNotFoundError:
-        return pd.read_csv("../"+questions_db_path)
+        return pd.read_csv("../" + questions_db_path)
+
 
 if __name__ == '__main__':
-    a = load_data('../data/db_output1.csv')
+    a = load_pervo_data('../data/db_output1.csv')
     filter_by_kpi(a)
