@@ -72,7 +72,6 @@ def sanitize(filename):
         sanitized_filename = 'unnamed_file'
     return sanitized_filename
 
-
 class PaperScraper:
     def __init__(self, DOI_list_path: str,
                  output_folder: str = None,

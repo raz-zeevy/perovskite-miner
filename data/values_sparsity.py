@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from data_exploration.utils import *
+from utils import *
 
 def plot_missing_fields(sorted_df, max_length=10, percentile = 0.05):
     """
@@ -147,7 +147,7 @@ def get_best_5p_fields():
 
 if __name__ == '__main__':
     db_path = "../data/Perovskite_database_content_all_data.csv"
-    df = load_pervo_data(db_path)
+    df = load_perovskite_data(db_path)
     # Get the percentage of missing values per field
     fields_by_missing_freq = (df.isna().sum() / len(df)).sort_values()
     fields_by_full_freq = (1 - (df.isna().sum() / len(df))).sort_values()

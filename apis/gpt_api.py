@@ -1,7 +1,3 @@
-
-import requests
-import json
-import pandas as pd
 import data.questions_const
 import tiktoken
 from config import OPEN_AI_KEY

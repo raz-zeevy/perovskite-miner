@@ -9,7 +9,7 @@ from prompt_engineering.prompt_engineering import (
     truncation
 )
 
-from gpt_api import openai_count_tokens
+from apis.gpt_api import openai_count_tokens
 
 questions = ["What is the meaning of life?", "Can you summarize the methodology?", "This is a question?"]
 paper_pdf_path = "pdf_mock.pdf"

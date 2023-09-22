@@ -1,12 +1,11 @@
-
 from prompt_engineering.prompt_engineering import openai_count_tokens as count_tokens
 from prompt_engineering.prompt_engineering_consts import preview_prompt
-
-from utlis import load_data, calculate_mean, calculate_std
+from utils import load_perovskite_data, calculate_mean, calculate_std, \
+    load_questions_db
 
 
 def calculate_question_stats():
-    data = load_data('../data/questions/questions_db.csv')
+    data = load_perovskite_data('../data/questions/questions_db.csv')
     gpt_questions = data[data['field_name'].notna()]['gpt_question']
     print("Questions amount: " + str(len(gpt_questions)))
 
@@ -16,9 +15,9 @@ def calculate_question_stats():
 
 def calculate_answer_stats():
     # calculate number of tokens in each answer (row).
-    questions_data = load_data('../data/questions/questions_db.csv')
+    questions_data = load_questions_db()
     filtered_question = questions_data[questions_data['field_name'].notna()]['field_name']
-    data = load_data('../data/Perovskite_database_content_all_data.csv')[filtered_question]
+    data = load_perovskite_data()[filtered_question]
     answers = rows_to_strings(data)
     answers_tokens = []
     for answer in answers:

@@ -1,5 +1,5 @@
 from prompt_engineering.prompt_engineering import openai_count_tokens as count_tokens, read_pdf, clean_text
-from utlis import calculate_mean, calculate_std
+from utils import calculate_mean, calculate_std
 
 import pandas as pd
 import numpy as np
