@@ -1,7 +1,7 @@
 import pandas as pd
 import jellyfish
-from data_exploration.questions_const import *
-from utils import load_pervo_data
+from data.questions_const import *
+from utils import load_perovskite_data
 
 DB_PATH = "../data/questions/questions_db.csv"
 
@@ -66,8 +66,8 @@ def infer_field_from_question(question: str) -> (int, str):
 
 
 def counted_tokens_data(questions_df : pd.DataFrame) -> pd.DataFrame:
-    from prompt_engineering.prompt_engineering import count_tokens
-    pervo_df = load_pervo_data()
+    from apis.gpt_api import openai_count_tokens as count_tokens
+    pervo_df = load_perovskite_data()
     tokens_per_field = pervo_df.applymap(lambda x : count_tokens(str(
         x))).mean().rename_axis(FIELD_NAME).reset_index().round(1)
     merged = pd.merge(questions_df, tokens_per_field, on=FIELD_NAME,

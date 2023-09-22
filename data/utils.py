@@ -11,14 +11,14 @@ def filter_by_kpi(df: pd.DataFrame) -> None:
 
 
 def get_kpi_fields():
-    q_df = load_pervo_data('data/questions/questions_db.csv')
+    q_df = load_perovskite_data('data/questions/questions_db.csv')
     keys = q_df[q_df[FIELD_NAME].notna()][FIELD_NAME].to_list()
     keys.remove("Ref_name_of_person_entering_the_data")
     keys.remove("Ref_data_entered_by_author")
     return keys
 
 
-def load_pervo_data(db_path='data/Perovskite_database_content_all_data.csv'):
+def load_perovskite_data(db_path='data/Perovskite_database_content_all_data.csv'):
     try:
         df = pd.read_csv(db_path, low_memory=False)
     except FileNotFoundError:
@@ -56,7 +56,7 @@ def sample_paper_by_devices(df: pd.DataFrame = None,
     :return:
     """
     if df is None:
-        df = load_pervo_data()
+        df = load_perovskite_data()
     count_ref_df = df.groupby("Ref_DOI_number")['Ref_ID'].count()
     count_ref_df = count_ref_df[(count_ref_df >= min_num_of_of_devices) &
                                 (count_ref_df <= max_num_of_of_devices)]
@@ -70,7 +70,6 @@ def load_questions_db():
         return pd.read_csv(questions_db_path)
     except FileNotFoundError:
         return pd.read_csv("../" + questions_db_path)
-
 
 
 def calculate_mean(token_counts):
@@ -91,5 +90,5 @@ def calculate_std(token_counts):
 
 
 if __name__ == '__main__':
-    a = load_pervo_data('../data/db_output1.csv')
+    a = load_perovskite_data('../data/db_output1.csv')
     filter_by_kpi(a)

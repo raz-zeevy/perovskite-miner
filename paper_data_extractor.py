@@ -1,8 +1,8 @@
 from pandas import DataFrame
-from gpt_api import post_paper_prompt
+from apis.gpt_api import post_paper_prompt
 from prompt_engineering.prompt_engineering import PaperPrompt
 import datetime
-from data_exploration.utils import *
+from data.utils import *
 import os
 import json
 

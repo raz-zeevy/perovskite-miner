@@ -1,7 +1,7 @@
 from pypdf import PdfReader
 from typing import List
 from .prompt_engineering_consts import preview_prompt, preview_prompt_tokens, tokens_deviation
-from gpt_api import openai_count_tokens
+from apis.gpt_api import openai_count_tokens
 import math
 import sys
 sys.path.insert(0, '../data_exploration')
