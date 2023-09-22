@@ -1,8 +1,21 @@
+
+import requests
+import json
+import pandas as pd
+import data.questions_const
+import tiktoken
 from config import OPEN_AI_KEY
 import openai
 
 MODEL_4 = 'gpt-3.5-turbo'
 MODEL_16 = 'gpt-3.5-turbo-16k'
+
+
+def openai_count_tokens(input_text):
+    encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
+    token_count = len(encoding.encode(input_text))
+    return token_count
+
 
 def post_paper_prompt(p_prompts, fake=False):
     from prompt_engineering.prompt_engineering import PaperPrompt
