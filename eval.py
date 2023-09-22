@@ -123,7 +123,7 @@ def eval_random_error(n=100):
     plot_stats(stats)
 
 def compare_results_from_db():
-    results_path = "data/papers/downloads/10.1002_adem.201900288_api_results.csv"
+    results_path = "dataset/papers/downloads/10.1002_adem.201900288_api_results.csv"
     ai_res = pd.read_csv(results_path).iloc[1]
     pervo_data = load_pervo_data()
     doi_number = '10.1002/adem.201900288'
