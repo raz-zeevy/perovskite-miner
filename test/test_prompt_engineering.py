@@ -1,17 +1,15 @@
 import pytest
 
-import sys
-sys.path.insert(0, '../prompt_engineering')
+from prompt_engineering.prompt_engineering_consts import gpt_preview_prompt
 
-from prompt_engineering_consts import gpt_preview_prompt, preview_prompt_tokens
-
-from prompt_engineering import (
+from prompt_engineering.prompt_engineering import (
     read_pdf,
     clean_text,
     PaperPrompt,
-    truncation,
-    count_tokens,
+    truncation
 )
+
+from gpt_api import openai_count_tokens
 
 questions = ["What is the meaning of life?", "Can you summarize the methodology?", "This is a question?"]
 paper_pdf_path = "pdf_mock.pdf"
@@ -88,8 +86,8 @@ def test_truncation():
     tokens_for_paper = 1000
     shrank_text = truncation(text, tokens_for_paper)
     tokens_deviation = 100
-    assert tokens_for_paper + tokens_deviation > count_tokens(shrank_text) > tokens_for_paper - tokens_deviation, \
-        "Unexpected number of tokens after truncation"
+    assert tokens_for_paper + tokens_deviation > openai_count_tokens(shrank_text) > \
+           tokens_for_paper - tokens_deviation, "Unexpected number of tokens after truncation"
     with(open('expected_text_after_truncation.txt', 'r')) as f:
         expected_text = f.read()
     assert shrank_text == expected_text, "Unexpected text after truncation"
@@ -97,4 +95,3 @@ def test_truncation():
 
 if __name__ == "__main__":
     pytest.main([__file__])
-
