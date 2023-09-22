@@ -1,19 +1,13 @@
-from prompt_engineering.prompt_engineering import count_tokens, read_pdf, clean_text
+from prompt_engineering.prompt_engineering import openai_count_tokens as count_tokens, read_pdf, clean_text
 from utlis import calculate_mean, calculate_std
 
 import pandas as pd
 import numpy as np
 import os
-
-import sys
-sys.path.insert(0, '../../perovskite-miner copy/prompt_engineering')
-
 import matplotlib
 matplotlib.use('TkAgg')
 
 import matplotlib.pyplot as plt
-
-
 
 
 def calculate_papers_stats(paper_db_path):
