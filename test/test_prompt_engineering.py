@@ -16,6 +16,14 @@ paper_pdf_path = "pdf_mock.pdf"
 expected_pdf_text = clean_text(read_pdf(paper_pdf_path))
 
 
+def test_read_pdf():
+    with pytest.raises(Exception):
+        read_pdf("non_existing_file.pdf")
+
+    with pytest.raises(Exception):
+        read_pdf("test_prompt_engineering.py")
+
+
 def test_clean_text():
     text = read_pdf('pdf_mock.pdf')
     cleaned_text = clean_text(text)
