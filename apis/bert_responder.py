@@ -7,11 +7,11 @@ import torch
 def access_bert():
     # Load pre-trained model and tokenizer
     model_name = "bert-large-uncased-whole-word-masking-finetuned-squad"
-    model = BertForQuestionAnswering.from_pretrained(model_name)
+    model = BertForQuestionAnswering.from_pretrained(model_name, cache_dir="./bert_model_cache/")
     tokenizer = BertTokenizer.from_pretrained(model_name)
 
     question = "What is the Ref Lead author?, Example:\"Jacobsson et al.\""
-    paper = clean_text(read_pdf("/test/pdf_mock.pdf"))
+    paper = clean_text(read_pdf("../test/pdf_mock.pdf"))
 
     # Tokenize input and obtain input_ids and attention_mask
     inputs = tokenizer(paper + question, preview_prompt, return_tensors='pt')
