@@ -2,6 +2,11 @@ import pandas as pd
 import numpy as np
 import math
 from data.questions_const import *
+from scraper.utils import sanitize
+import os
+
+QUESTIONS_DB_CSV = r"dataset/questions/questions_db.csv"
+
 
 def filter_by_kpi(df: pd.DataFrame) -> None:
     kpi_fields = get_kpi_fields()
@@ -11,14 +16,14 @@ def filter_by_kpi(df: pd.DataFrame) -> None:
 
 
 def get_kpi_fields():
-    q_df = load_perovskite_data('data/questions/questions_db.csv')
+    q_df = load_perovskite_data(QUESTIONS_DB_CSV)
     keys = q_df[q_df[FIELD_NAME].notna()][FIELD_NAME].to_list()
     keys.remove("Ref_name_of_person_entering_the_data")
     keys.remove("Ref_data_entered_by_author")
     return keys
 
 
-def load_perovskite_data(db_path='data/Perovskite_database_content_all_data.csv'):
+def load_perovskite_data(db_path='dataset/Perovskite_database_content_all_data.csv'):
     try:
         df = pd.read_csv(db_path, low_memory=False)
     except FileNotFoundError:
@@ -45,27 +50,42 @@ def sample_disjoint_devices(df: pd.DataFrame, n=1):
 
 
 def sample_paper_by_devices(df: pd.DataFrame = None,
+                            n=1,
                             min_num_of_of_devices=-np.inf,
-                            max_num_of_of_devices=np.inf):
+                            max_num_of_of_devices=np.inf,
+                            filter_by_available=False):
     """
     Sample a random paper from the database that has a certain number of
     references (devices)
     :param df:
+    :param n:
     :param min_num_of_of_devices:
     :param max_num_of_of_devices:
+    :param filter_by_available:
     :return:
     """
-    if df is None:
+    if df is None :
         df = load_perovskite_data()
+    if filter_by_available:
+        df = filter_by_available_papers(df)
     count_ref_df = df.groupby("Ref_DOI_number")['Ref_ID'].count()
     count_ref_df = count_ref_df[(count_ref_df >= min_num_of_of_devices) &
                                 (count_ref_df <= max_num_of_of_devices)]
-    random_doi = np.random.choice(count_ref_df.index)
-    return df[df["Ref_DOI_number"] == random_doi]
+    random_doi = np.random.choice(count_ref_df.index, size=n)
+    return df[df["Ref_DOI_number"].isin(random_doi)]
+
+
+def filter_by_available_papers(df: pd.DataFrame):
+    papers_folder = "dataset/papers"
+    papers = os.listdir(papers_folder)
+
+    papers = [paper[:-4] for paper in papers]
+    df = df[df['Ref_DOI_number'].apply(lambda x: sanitize(str(x))).isin(papers)]
+    return df
 
 
 def load_questions_db():
-    questions_db_path = r"data/questions/questions_db.csv"
+    questions_db_path = QUESTIONS_DB_CSV
     try:
         return pd.read_csv(questions_db_path)
     except FileNotFoundError:
