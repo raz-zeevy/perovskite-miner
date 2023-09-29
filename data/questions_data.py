@@ -1,9 +1,11 @@
 import pandas as pd
 import jellyfish
 from data.questions_const import *
-from utils import load_perovskite_data
+from data.utils import load_perovskite_data
+from datetime import datetime
 
-DB_PATH = "../data/questions/questions_db.csv"
+DB_PATH = "../dataset/questions/questions_db.csv"
+
 
 def format_questions_and_save_5_4(
         protocol_path='Extraction protocolls version 5_4.xlsx',
@@ -49,6 +51,7 @@ def load_questions_from_txt(questions_path):
             questions.append(line.strip())
     return questions
 
+
 def question_to_field(question: str):
     return best_5p_question_to_field.get(question)
 
@@ -76,8 +79,9 @@ def counted_tokens_data(questions_df : pd.DataFrame) -> pd.DataFrame:
         lambda x: count_tokens(x))
     return merged
 
+
 def create_questions_db(output_path: str) -> None:
-    protocol_path = r'../data/questions/Extraction protocolls version 5_4.xlsx'
+    protocol_path = r'../dataset/questions/Extraction protocolls version 5_4.xlsx'
     sheet_name = 'Master'
     df = pd.read_excel(protocol_path, sheet_name=sheet_name)
     df.reset_index(inplace=True)
@@ -85,15 +89,52 @@ def create_questions_db(output_path: str) -> None:
         protocol_path=protocol_path,
         save_output=False,
         print_output=False)
-    df.columns = [QID, PROTOCOL_QUESTION, EXAMPLE_ANSWER,
-                  GPT_QUESTION]
-    df[FIELD_NAME] = df[PROTOCOL_QUESTION].apply(
-        lambda question: question_to_field(question))
-    df = df[[QID, PROTOCOL_QUESTION, FIELD_NAME, GPT_QUESTION,
-             EXAMPLE_ANSWER]]
+    df.columns = [QID, PROTOCOL_QUESTION, EXAMPLE_ANSWER,GPT_QUESTION]
+    df[FIELD_NAME] = df[PROTOCOL_QUESTION].apply(lambda question: question_to_field(question))
+    df = df[[QID, PROTOCOL_QUESTION, FIELD_NAME, GPT_QUESTION, EXAMPLE_ANSWER]]
     df = counted_tokens_data(df)
+    df = add_question_type(df)
+    df = add_is_kpi_field(df)
     df.to_csv(output_path, index=False)
+
+
+def is_date(string: str) -> bool:
+    try:
+        datetime.strptime(string, '%Y-%m-%d %H:%M:%S')
+        return True
+    except ValueError:
+        return False
+
+
+def infer_question_type(example_answer: str) -> str:
+    example_answer = str(example_answer)
+    if example_answer == '':
+        return ''
+    if '|' in example_answer:
+        first_part_in_seq = example_answer.split('|')[0].strip()
+        return 'sequence of ' + infer_question_type(first_part_in_seq)
+    elif 'TRUE' in example_answer.upper() or 'FALSE' in example_answer.upper():
+        return 'boolean'
+    elif is_date(example_answer):
+        return 'date'
+    elif example_answer.replace(".", "").isdigit():
+        if '.' in example_answer:
+            return 'float'
+        return 'int'
+    else:
+        return 'string'
+
+
+def add_question_type(df: pd.DataFrame) -> pd.DataFrame:
+    df[QUESTION_TYPE] = df[EXAMPLE_ANSWER].apply(lambda x: infer_question_type(x))
+    return df
+
+
+def add_is_kpi_field(df: pd.DataFrame) -> pd.DataFrame:
+    df[IS_KPI_FIELD] = df[FIELD_NAME].apply(lambda x: x is not None)
+    return df
 
 
 if __name__ == '__main__':
     create_questions_db(output_path=DB_PATH)
+    print("done")
