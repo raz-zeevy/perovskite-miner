@@ -101,8 +101,8 @@ def mine_paper(paper_pdf_path, fake=False):
 
 
 def mine_paper_by_doi(paper_doi, fake=True):
-    from scraper.scrape_papers import sanitize
-    download_folder = "data/papers/downloads"
+    from scraper.utils import sanitize
+    download_folder = "dataset/papers/downloads"
     pdf_name = sanitize(paper_doi) + ".pdf"
     pdf_path = os.path.join(download_folder, pdf_name)
     mine_paper(pdf_path, fake=fake)

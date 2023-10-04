@@ -1,6 +1,6 @@
 from prompt_engineering.prompt_engineering import openai_count_tokens as count_tokens
 from prompt_engineering.prompt_engineering_consts import preview_prompt
-from utils import load_perovskite_data, calculate_mean, calculate_std, \
+from data.utils import load_perovskite_data, calculate_mean, calculate_std, \
     load_questions_db
 
 
