@@ -71,6 +71,7 @@ def gpt_fill(paper_pdf_path, fields=None, questions=None, qids=None,
         return res
     return results_to_df(res, kpi_columns=q_df[FIELD_NAME].to_list())
 
+
 def results_to_df(res, kpi_columns: list):
     res = res.strip()
     res_rows = [row for row in res.split("\n") if row]
@@ -98,6 +99,7 @@ def mine_paper(paper_pdf_path, fake=False):
     if isinstance(y_pred, DataFrame):
         y_pred.to_csv(output_name(paper_pdf_path), index=False)
 
+
 def mine_paper_by_doi(paper_doi, fake=True):
     from paper_scraper.scrape_papers import sanitize
     download_folder = "data/papers/downloads"
@@ -105,12 +107,22 @@ def mine_paper_by_doi(paper_doi, fake=True):
     pdf_path = os.path.join(download_folder, pdf_name)
     mine_paper(pdf_path, fake=fake)
 
+
 if __name__ == '__main__':
+    # todo: add indicative prints about the progress of the mining.
+    # todo: check if input fields and output fields are the same.
+
     # paper_pdf_path = r"data/papers/downloads/10.1002_adem.201900288.pdf"
     # mine_paper(paper_pdf_path, fake=True)
     # from data_exploration.utils import sample_paper_by_devices
-    # paper_doi = sample_paper_by_devices(min_num_of_of_devices=1,
-    #                                     max_num_of_of_devices=1)[
-        # 'Ref_DOI_number'].values[0]
-    paper_doi = '10.1021/acs.jpcc.8b01121'
-    mine_paper_by_doi(paper_doi, fake=False)
+    # paper_doi = sample_paper_by_devices(n=5, min_num_of_of_devices=1,
+    #                                     max_num_of_of_devices=1,
+    #                                     filter_by_available=True)['Ref_DOI_number'].values
+    # print(paper_doi)
+    for paper_doi in ['10.1557/adv.2019.79', '10.1016/j.ces.2019.01.003', '10.1021/acs.nanolett.6b02158',
+                      '10.1016/j.jpowsour.2015.05.106', '10.1016/j.solmat.2016.07.037']:
+        try:
+            mine_paper_by_doi(paper_doi, fake=False)
+        except Exception as e:
+            print(f"Parse Failed: for paper:{paper_doi}" + str(e))
+            continue

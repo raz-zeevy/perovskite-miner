@@ -5,7 +5,7 @@ from utils import load_perovskite_data, calculate_mean, calculate_std, \
 
 
 def calculate_question_stats():
-    data = load_perovskite_data('../data/questions/questions_db.csv')
+    data = load_perovskite_data('dataset/questions/questions_db.csv')
     gpt_questions = data[data['field_name'].notna()]['gpt_question']
     print("Questions amount: " + str(len(gpt_questions)))
 

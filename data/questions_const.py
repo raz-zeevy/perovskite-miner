@@ -6,7 +6,10 @@ EXAMPLE_ANSWER = "example_answer"
 PROTOCOL_QUESTION = "protocol_question"
 TOKENS_PER_ANSWER = 'tokens_per_answer'
 TOKENS_PER_QUESTIONS = 'tokens_per_questions'
+QUESTION_TYPE = 'question_type'
+IS_KPI_FIELD = 'is_kpi_field'
 #
+
 best_5p_fields = ['Add_lay_back', 'Add_lay_front',
                   'Backcontact_deposition_procedure',
                   'Backcontact_stack_sequence', 'Cell_architecture',
