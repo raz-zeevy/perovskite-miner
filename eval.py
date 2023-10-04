@@ -134,6 +134,9 @@ def compare_results_from_db():
         print(f"Error rate: {round(error_rate, 3)}%")
     print(true_res)
 
+def add_real_results(results_path, doi_number):
+
+
 if __name__ == '__main__':
     np.random.seed(42)
     # eval_random_error(n=100)

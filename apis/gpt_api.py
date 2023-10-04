@@ -29,11 +29,6 @@ def access_chat_gpt_3(prompts_text: [],
     if fake:
         return mock_response
     openai.api_key = OPEN_AI_KEY
-    # list models
-    # models = openai.Model.list()
-    # print the first model's id
-    # print(models.data[0].id)
-    # create a chat completion
     prompts = [dict(role="user",
                     content=txt) for txt in prompts_text]
     chat_completion = openai.ChatCompletion.create(

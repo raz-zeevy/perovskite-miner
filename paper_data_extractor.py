@@ -99,7 +99,7 @@ def mine_paper(paper_pdf_path, fake=False):
         y_pred.to_csv(output_name(paper_pdf_path), index=False)
 
 def mine_paper_by_doi(paper_doi, fake=True):
-    from scraper.scrape_papers import sanitize
+    from paper_scraper.scrape_papers import sanitize
     download_folder = "data/papers/downloads"
     pdf_name = sanitize(paper_doi) + ".pdf"
     pdf_path = os.path.join(download_folder, pdf_name)
