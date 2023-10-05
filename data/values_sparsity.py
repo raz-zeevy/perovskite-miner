@@ -146,7 +146,7 @@ def get_best_5p_fields():
     return fields_by_missing_freq[fields_by_missing_freq < 0.05].index
 
 if __name__ == '__main__':
-    db_path = "../data/Perovskite_database_content_all_data.csv"
+    db_path = "../dataset/Perovskite_database_content_all_data.csv"
     df = load_perovskite_data(db_path)
     # Get the percentage of missing values per field
     fields_by_missing_freq = (df.isna().sum() / len(df)).sort_values()
