@@ -26,8 +26,6 @@ def post_paper_prompt(p_prompts, fake=False):
 
 def access_chat_gpt_3(prompts_text: [],
                       fake=False):
-    if fake:
-        return mock_response
     openai.api_key = OPEN_AI_KEY
     prompts = [dict(role="user",
                     content=txt) for txt in prompts_text]
@@ -41,9 +39,9 @@ def access_chat_gpt_3(prompts_text: [],
 
 
 dummy_response = "DOI: 10.1016/j.jacc.2019.11.056\n" \
-               "PMID: 31918846\n" \
-               "Number of patients: 1,000\n" \
-               "Patients age: 50-60\n"
+                 "PMID: 31918846\n" \
+                 "Number of patients: 1,000\n" \
+                 "Patients age: 50-60\n"
 
 mock_response = \
     """Ref DOI number: 10.1002/adem.201900288
