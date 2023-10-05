@@ -98,6 +98,7 @@ def mine_paper(paper_pdf_path, fake=False):
     y_pred = gpt_fill(paper_pdf_path, fake=fake)
     if isinstance(y_pred, DataFrame):
         y_pred.to_csv(output_name(paper_pdf_path), index=False)
+    return y_pred
 
 
 def mine_paper_by_doi(paper_doi, fake=True):
@@ -105,24 +106,40 @@ def mine_paper_by_doi(paper_doi, fake=True):
     download_folder = "dataset/papers/downloads"
     pdf_name = sanitize(paper_doi) + ".pdf"
     pdf_path = os.path.join(download_folder, pdf_name)
-    mine_paper(pdf_path, fake=fake)
+    return mine_paper(pdf_path, fake=fake)
+
+
+def create_results_vs_db_output(results_df, paper_doi):
+    """
+    Create a csv file that contains the results of the GPT-3 API and the
+    database side by side.
+    :param results_df: the results of the GPT-3 API.
+    :param paper_doi: paper DOI number.
+    """
+
+    all_data = load_perovskite_data()
+    paper_row = all_data[all_data['Ref_DOI_number'] == paper_doi]
+    paper_row = paper_row[get_kpi_fields()]
+
+    df1 = results_df.iloc[:1]
+    df2 = results_df.iloc[1:]
+
+    # Concatenate the DataFrames with the paper_row in between
+    results_df = pd.concat([df1, paper_row, df2], ignore_index=True)
+    results_df = pd.DataFrame(np.vstack([results_df.columns, results_df]))
+    results_df.T.to_csv(RESULTS_FOLDER + f"/{sanitize(paper_doi)}_combined_results.csv", index=False)
+    print(f"saved combined results for paper {paper_doi}")
 
 
 if __name__ == '__main__':
     # todo: add indicative prints about the progress of the mining.
     # todo: check if input fields and output fields are the same.
-
-    # paper_pdf_path = r"data/papers/downloads/10.1002_adem.201900288.pdf"
-    # mine_paper(paper_pdf_path, fake=True)
-    # from data_exploration.utils import sample_paper_by_devices
-    # paper_doi = sample_paper_by_devices(n=5, min_num_of_of_devices=1,
-    #                                     max_num_of_of_devices=1,
-    #                                     filter_by_available=True)['Ref_DOI_number'].values
-    # print(paper_doi)
     for paper_doi in ['10.1557/adv.2019.79', '10.1016/j.ces.2019.01.003', '10.1021/acs.nanolett.6b02158',
                       '10.1016/j.jpowsour.2015.05.106', '10.1016/j.solmat.2016.07.037']:
         try:
-            mine_paper_by_doi(paper_doi, fake=False)
+            df_result = mine_paper_by_doi(paper_doi, fake=True)
+            create_results_vs_db_output(df_result, paper_doi)
+            filter_non_boolean_questions()
         except Exception as e:
             print(f"Parse Failed: for paper:{paper_doi}" + str(e))
             continue
