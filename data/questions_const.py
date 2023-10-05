@@ -10,6 +10,13 @@ QUESTION_TYPE = 'question_type'
 IS_KPI_FIELD = 'is_kpi_field'
 #
 
+FIELDS_TO_REMOVE = ["Ref_name_of_person_entering_the_data",
+                    "Ref_data_entered_by_author",
+                    "Ref_lead_author",
+                    "Ref_DOI_number",
+                    "Ref_publication_date"]
+
+
 best_5p_fields = ['Add_lay_back', 'Add_lay_front',
                   'Backcontact_deposition_procedure',
                   'Backcontact_stack_sequence', 'Cell_architecture',

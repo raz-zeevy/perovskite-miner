@@ -20,7 +20,7 @@ from datetime import datetime
 
 import numpy as np
 import requests
-from utils import *
+from scraper.utils import *
 import winsound
 from numpy import ndarray
 from selenium.webdriver.chrome.service import Service as ChromeService
