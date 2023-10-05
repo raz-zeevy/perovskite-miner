@@ -6,14 +6,13 @@ the mean loss is
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import numpy as np
-from data_exploration.utils import load_pervo_data, \
+from data.utils import load_perovskite_data, \
     sample_paper_by_devices, sample_disjoint_devices, filter_by_kpi
 import pandas as pd
 
 w = {
 
 }
-
 
 # todo (0): all should be changed to vector multiplication if we change to
 #  training a model with that
@@ -122,11 +121,10 @@ def eval_random_error(n=100):
     stats = calc_random_error_stats(load_pervo_data(), n)
     plot_stats(stats)
 
-def compare_results_from_db():
-    results_path = "dataset/papers/downloads/10.1002_adem.201900288_api_results.csv"
-    ai_res = pd.read_csv(results_path).iloc[1]
-    pervo_data = load_pervo_data()
-    doi_number = '10.1002/adem.201900288'
+def compare_results_from_db(results_path="dataset/papers/downloads/10.1002_adem.201900288_api_results.csv",
+                            doi_number='10.1002/adem.201900288'):
+    ai_res = pd.read_csv(results_path)
+    pervo_data = load_perovskite_data()
     true_res = pervo_data[pervo_data['Ref_DOI_number'] == doi_number]
     filter_by_kpi(true_res)
     for i, y_pred in true_res.iterrows():
@@ -135,12 +133,18 @@ def compare_results_from_db():
     print(true_res)
 
 def add_real_results(results_path, doi_number):
+    pass
 
 
 if __name__ == '__main__':
     np.random.seed(42)
     # eval_random_error(n=100)
-    compare_results_from_db()
+    results_path = "dataset/db_vs_model_output/10.1016_j.ces.2019.01.003_combined_results.csv"
+    doi_number = '10.1016/j.ces.2019.01.003'
+    compare_results_from_db(
+        results_path=results_path,
+        doi_number=doi_number
+    )
     # df = load_pervo_data()
     # y_true_all = sample_paper_by_devices(df, 5, 5)
     # y_true = y_true_all.iloc[0]
