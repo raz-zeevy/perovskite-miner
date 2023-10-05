@@ -4,8 +4,10 @@ import math
 from data.questions_const import *
 from scraper.utils import sanitize
 import os
+from typing import List
 
 QUESTIONS_DB_CSV = r"dataset/questions/questions_db.csv"
+RESULTS_FOLDER = r"dataset/db_vs_model_output"
 
 
 def filter_by_kpi(df: pd.DataFrame) -> None:
@@ -18,8 +20,8 @@ def filter_by_kpi(df: pd.DataFrame) -> None:
 def get_kpi_fields():
     q_df = load_perovskite_data(QUESTIONS_DB_CSV)
     keys = q_df[q_df[FIELD_NAME].notna()][FIELD_NAME].to_list()
-    keys.remove("Ref_name_of_person_entering_the_data")
-    keys.remove("Ref_data_entered_by_author")
+    for field in FIELDS_TO_REMOVE:
+        keys.remove(field)
     return keys
 
 
@@ -82,6 +84,28 @@ def filter_by_available_papers(df: pd.DataFrame):
     papers = [paper[:-4] for paper in papers]
     df = df[df['Ref_DOI_number'].apply(lambda x: sanitize(str(x))).isin(papers)]
     return df
+
+
+def common_fields(kpi_fields: List[str], non_boolean_questions: List[str]) -> List[str]:
+    return [field for field in kpi_fields if field in non_boolean_questions]
+
+
+def filter_non_boolean_questions():
+    for file in os.listdir(RESULTS_FOLDER):
+        if file.endswith(".csv") and not file.startswith("clean"):
+            df = pd.read_csv(os.path.join(RESULTS_FOLDER, file))
+            df = df.set_index(df.columns[0])
+            df = df.T
+            df = df[common_fields(get_kpi_fields(), get_non_boolean_questions())]
+
+            # should be +- 36 columns and 4 (3?) rows
+            clean_results = pd.DataFrame(np.vstack([df.columns, df]))
+            clean_results.T.to_csv(RESULTS_FOLDER + f"/clean_out_{file}", index=False)
+
+
+def get_non_boolean_questions():
+    q_df = load_questions_db()
+    return q_df[q_df[QUESTION_TYPE] != 'boolean']['field_name'].dropna().to_list()
 
 
 def load_questions_db():
