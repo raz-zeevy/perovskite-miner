@@ -40,10 +40,9 @@ def calculate_similarity(field1, field2):
     max_len = max(len(field1), len(field2))
     damaro_lev = 1 - (jellyfish.damerau_levenshtein_distance(field1,
                                                              field2) / max_len)
-    return np.mean([
-        jaro_winkler,
-        mra,
-        damaro_lev])
+    metrics = [metric for metric in [mra,damaro_lev,jaro_winkler]
+               if metric is not None]
+    return np.mean(metrics)
 
 
 def match_fields(real_fields, ai_fields) -> dict:
@@ -83,20 +82,26 @@ def rearrange_output(data, matched_fields):
 
     return rearranged_data
 
+def match_api_output(real_fields, ai_output) -> (dict, dict):
+    ai_fields = list(ai_output.keys())
+    matched_fields = match_fields(real_fields, ai_fields)
+    # match the data
+    matched_data = rearrange_output(ai_output, matched_fields)
+    # invert the dict
+    matched_fields = {v: k for k, v in matched_fields.items()}
+    return matched_fields, matched_data
 
-# Sample data
-real_fields = ["not_existing_field", "Cell_stack_sequence", "Empty_field",
-               "Cell_area_measured",
-               "Cell_architecture", "not_existing_field"]
-ai_fields = ["Cell Stack sequence", "Cell Area Measured", "Cell Architecture"]
-ai_output = {
-    "Cell Stack sequence": "SLG | FTO | TiO2-c | TiO2-mp | Perovskite | ITO",
-    "Cell Area Measured": "0.096",
-    "Cell Architecture": "nip"
-}
-
-# Match fields and rearrange output
-matched_fields = match_fields(real_fields, ai_fields)
-rearranged_data = rearrange_output(ai_output, matched_fields)
-print(rearranged_data)
-print("done")
+if __name__ == '__main__':
+    # Sample data
+    real_fields = ["not_existing_field", "Cell_stack_sequence", "Empty_field",
+                   "Cell_area_measured",
+                   "Cell_architecture", "not_existing_field"]
+    ai_fields = ["Cell Stack sequence", "Cell Area Measured", "Cell Architecture"]
+    ai_output = {
+        "Cell Stack sequence": "SLG | FTO | TiO2-c | TiO2-mp | Perovskite | ITO",
+        "Cell Area Measured": "0.096",
+        "Cell Architecture": "nip"
+    }
+    rearranged_data = match_api_output(real_fields,ai_output)
+    print(rearranged_data)
+    print("done")
