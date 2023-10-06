@@ -4,14 +4,8 @@ from data.questions_const import *
 from data.utils import load_perovskite_data
 from datetime import datetime
 
-FT_FLOAT = 'float'
-FT_SEQ_SUFFIX = "_seq"
-FT_STRING = 'string'
-FT_INT = 'int'
-FT_DATE = 'date'
-FT_BOOLEAN = 'boolean'
-
 DB_PATH = "../dataset/questions/questions_db.csv"
+
 
 def format_questions_and_save_5_4(
         protocol_path='Extraction protocolls version 5_4.xlsx',
@@ -72,6 +66,8 @@ def infer_field_from_question(question: str) -> (int, str):
             print("question: ", question)
             print("field: ", field)
             return i, field
+
+
 def counted_tokens_data(questions_df : pd.DataFrame) -> pd.DataFrame:
     from apis.gpt_api import openai_count_tokens as count_tokens
     pervo_df = load_perovskite_data()
@@ -82,6 +78,7 @@ def counted_tokens_data(questions_df : pd.DataFrame) -> pd.DataFrame:
     merged[TOKENS_PER_QUESTIONS] = merged[GPT_QUESTION].apply(
         lambda x: count_tokens(x))
     return merged
+
 
 def create_questions_db(output_path: str) -> None:
     protocol_path = r'../dataset/questions/Extraction protocolls version 5_4.xlsx'
@@ -108,23 +105,24 @@ def is_date(string: str) -> bool:
     except ValueError:
         return False
 
+
 def infer_question_type(example_answer: str) -> str:
     example_answer = str(example_answer)
     if example_answer == '':
         return ''
     if '|' in example_answer:
         first_part_in_seq = example_answer.split('|')[0].strip()
-        return infer_question_type(first_part_in_seq)+ FT_SEQ_SUFFIX
+        return 'sequence of ' + infer_question_type(first_part_in_seq)
     elif 'TRUE' in example_answer.upper() or 'FALSE' in example_answer.upper():
-        return FT_BOOLEAN
+        return 'boolean'
     elif is_date(example_answer):
-        return FT_DATE
+        return 'date'
     elif example_answer.replace(".", "").isdigit():
         if '.' in example_answer:
-            return FT_FLOAT
-        return FT_INT
+            return 'float'
+        return 'int'
     else:
-        return FT_STRING
+        return 'string'
 
 
 def add_question_type(df: pd.DataFrame) -> pd.DataFrame:
@@ -136,10 +134,6 @@ def add_is_kpi_field(df: pd.DataFrame) -> pd.DataFrame:
     df[IS_KPI_FIELD] = df[FIELD_NAME].apply(lambda x: x is not None)
     return df
 
-
-# Todo: add the doc prioritization score as a new column
-# Todo: remove the example answer on binary fields
-# Todo: loading numbers such as 1 and 0 is still converted to True and False
 
 if __name__ == '__main__':
     create_questions_db(output_path=DB_PATH)
