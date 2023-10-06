@@ -8,6 +8,7 @@ TOKENS_PER_ANSWER = 'tokens_per_answer'
 TOKENS_PER_QUESTIONS = 'tokens_per_questions'
 QUESTION_TYPE = 'question_type'
 IS_KPI_FIELD = 'is_kpi_field'
+QUESTION_SCORE = 'question_score'
 #
 
 FIELDS_TO_REMOVE = ["Ref_name_of_person_entering_the_data",
@@ -15,7 +16,6 @@ FIELDS_TO_REMOVE = ["Ref_name_of_person_entering_the_data",
                     "Ref_lead_author",
                     "Ref_DOI_number",
                     "Ref_publication_date"]
-
 
 best_5p_fields = ['Add_lay_back', 'Add_lay_front',
                   'Backcontact_deposition_procedure',
@@ -203,6 +203,199 @@ best_5p_fields_to_questions = {
     'Perovskite_deposition_aggregation_state_of_reactants': 'Perovskite. Deposition. Aggregation state of reactants (Liquid/Gas/Solid) [Agr. 1 >> Agr. 2 >> ... | Agr. 3 >> … | Agr. 4 | ... ]',
     'Perovskite_deposition_number_of_deposition_steps': 'Perovskite. Deposition. Number of deposition steps',
     'Perovskite_deposition_procedure': 'Perovskite. Deposition. Procedure [Proc. 1 >> Proc. 2 >> ... | Proc. 3 >> … | Proc. 4 | ... ]',
+}
+
+best_5p_question_to_field = {'Substrate. Stack sequence [Mat.1; Mat.2; ... | '
+                             'Mat.3; ... | Mat.4 | ...]':
+                                 'Substrate_stack_sequence', 'Stability. '
+                                                             'Temperature. '
+                                                             'Range [T.min; '
+                                                             'T.max] or ['
+                                                             'T.constant] ['
+                                                             'deg. C]':
+                                 'Stability_temperature_range', 'Stability. Relative humidity. Range ['
+                                                                'RH.min; RH.max] [%]':
+                                 'Stability_relative_humidity_range', 'Stability. Potential bias. Range ['
+                                                                      'U.min; U.max] or [U.constant] ['
+                                                                      'V]':
+                                 'Stability_potential_bias_range', 'Stability. Periodic JV measurements ['
+                                                                   'TRUE/FALSE]':
+                                 'Stability_periodic_JV_measurements', 'Stability. Measured ['
+                                                                       'TRUE/FALSE]':
+                                 'Stability_measured', 'Stability. Light. Wavelength range [lambda min; '
+                                                       'lambda max] or [lambda constant] [nm]':
+                                 'Stability_light_wavelength_range', 'Stability. Light. UV filter ['
+                                                                     'TRUE/FALSE]':
+                                 'Stability_light_UV_filter', 'Stability. Flexible cell. Number of '
+                                                              'bending cycles':
+                                 'Stability_flexible_cell_number_of_bending_cycles', 'Stability. Average '
+                                                                                     'over N number of '
+                                                                                     'cells':
+                                 'Stability_average_over_n_number_of_cells', 'Stability. PCE. Burn in '
+                                                                             'observed [TRUE/FALSE]':
+                                 'Stability_PCE_burn_in_observed', 'Stabilised performance. Measured ['
+                                                                   'TRUE/FALSE]':
+                                 'Stabilised_performance_measured', 'Ref. Publication date [year:mm:dd]':
+                                 'Ref_publication_date', None: 'Perovskite_composition_short_form',
+                             'Ref. Name of person entering the data':
+                                 'Ref_name_of_person_entering_the_data',
+                             'Ref. Lead author': 'Ref_lead_author',
+                             'Ref. Data entered by author [TRUE/FALSE]':
+                                 'Ref_data_entered_by_author', 'Ref. ID temp '
+                                                               '(Integer '
+                                                               'starting from '
+                                                               '1 and '
+                                                               'counting '
+                                                               'upwards)':
+                                 'Ref_ID_temp', 'Ref. DOI number':
+                                 'Ref_DOI_number', 'Perovskite. Single '
+                                                   'crystal [TRUE/FALSE]':
+                                 'Perovskite_single_crystal', 'Perovskite. '
+                                                              'Dimension. '
+                                                              'List of layers '
+                                                              '[Dim.1 | Dim.2 '
+                                                              '| …]':
+                                 'Perovskite_dimension_list_of_layers',
+                             'Perovskite. Dimension. 3Dwith 2D capping layer '
+                             '[TRUE/FALSE]':
+                                 'Perovskite_dimension_3D_with_2D_capping_layer',
+                             'Perovskite. Dimension. 3D [TRUE/FALSE]': 'Perovskite_dimension_3D',
+                             'Perovskite. Dimension. 2D/3D mixture [TRUE/FALSE]': 'Perovskite_dimension_2D3D_mixture',
+                             'Perovskite. Dimension. 2D [TRUE/FALSE]': 'Perovskite_dimension_2D',
+                             'Perovskite. Dimension. 0D (Quantum dot) [TRUE/FALSE]': 'Perovskite_dimension_0D',
+                             'Perovskite. Deposition. Solvents [Sol.1; Sol.2 >> Sol.3; ... >> ... | Sol.4 >> … | Sol.5 | ... ]': 'Perovskite_deposition_solvents',
+                             'Perovskite. Deposition. Solvent annealing [TRUE/FALSE]': 'Perovskite_deposition_solvent_annealing',
+                             'Perovskite. Deposition. Quenching induced crystallisation [TRUE/FALSE]': 'Perovskite_deposition_quenching_induced_crystallisation',
+                             'Add. Lay. Back [TRUE/FALSE]': 'Add_lay_back',
+                             'Add. Lay. Front [TRUE/FALSE]': 'Add_lay_front',
+                             'Backcontact. Deposition. Procedure [Proc. 1 >> Proc. 2 >> ... | Proc. 3 >> … | Proc. 4 | ... ]': 'Backcontact_deposition_procedure',
+                             'Backcontact. Stack sequence [Mat.1; Mat.2; ... | Mat.3; ... | Mat.4 | ...]': 'Backcontact_stack_sequence',
+                             'Cell. Architecture [nip/pin/ …]': 'Cell_architecture',
+                             'Cell. Area. Measured [cm^2]': 'Cell_area_measured',
+                             'Cell. Flexible [TRUE/FALSE]': 'Cell_flexible',
+                             'Cell. Number of cells per substrate': 'Cell_number_of_cells_per_substrate',
+                             'Cell. Semitransparent [TRUE/FALSE]': 'Cell_semitransparent',
+                             'Cell. Semitransparent. Average visible transmittance. Wavelength range [lambda_min; lambda_max]': 'Cell_semitransparent_wavelength_range',
+                             'Cell. Stack sequence [Mat.1; Mat.2; ... | Mat.3; ... | Mat.4 | ...]': 'Cell_stack_sequence',
+                             'EQE. Measured [TRUE/FALSE]': 'EQE_measured',
+                             'ETL. Deposition. Procedure [Proc. 1 >> Proc. 2 >> ... | Proc. 3 >> … | Proc. 4 | ... ]': 'ETL_deposition_procedure',
+                             'ETL. Stack sequence [Mat.1; Mat.2; ... | Mat.3; ... | Mat.4 | ...]': 'ETL_stack_sequence',
+                             'Encapsulation [TRUE/FALSE]': 'Encapsulation',
+                             'HTL. Stack sequence [Mat.1; Mat.2; ... | Mat.3; ... | Mat.4 | ...]': 'HTL_stack_sequence',
+                             'JV. Average over N number of cells': 'JV_average_over_n_number_of_cells',
+                             'JV. Certified values [TRUE/FALSE]': 'JV_certified_values',
+                             'JV. Light. Intensity [mW/cm^2]': 'JV_light_intensity',
+                             'JV. Light. Masked cell [TRUE/FALSE]': 'JV_light_masked_cell',
+                             'JV. Light. Wavelength range [lambda min; lambda max] or [lambda constant] [nm]': 'JV_light_wavelength_range',
+                             'JV. Measured [TRUE/FALSE]': 'JV_measured',
+                             'JV. Reverse scan. PCE [%]': 'JV_reverse_scan_PCE', 'Module [TRUE/FALSE]': 'Module',
+                             'Module. JV data recalculated per cell [TRUE/FALSE]': 'Module_JV_data_recalculated_per_cell',
+                             'Module. Number of cells in module': 'Module_number_of_cells_in_module',
+                             'Outdoor. PCE. Burn in observed [TRUE/FALSE]': 'Outdoor_PCE_burn_in_observed',
+                             'Outdoor. Average over N number of cells': 'Outdoor_average_over_n_number_of_cells',
+                             'Outdoor. Detaild weather data available [TRUE/FALSE]': 'Outdoor_detaild_weather_data_available',
+                             'Outdoor. Installation. Number of solar tracking axis [0/1/2]': 'Outdoor_installation_number_of_solar_tracking_axis',
+                             'Outdoor. Irradiance measured [TRUE/FALSE]': 'Outdoor_irradiance_measured',
+                             'Outdoor. Location. Coordinates [Latitude; Longitude] [decimal degrees]': 'Outdoor_location_coordinates',
+                             'Outdoor. Periodic JV measurements [TRUE/FALSE]': 'Outdoor_periodic_JV_measurements',
+                             'Outdoor. Potential bias. Range [U.min; U.max] or [U.constant] [V]': 'Outdoor_potential_bias_range',
+                             'Outdoor. Spectral data available [TRUE/FALSE]': 'Outdoor_spectral_data_available',
+                             'Outdoor. Temperature. Range [T.min; T.max] or [T.constant] [deg. C]': 'Outdoor_temperature_range',
+                             'Outdoor. Tested [TRUE/FALSE]': 'Outdoor_tested',
+                             'Outdoor. Time. End [year:mm:dd:hh:mm]': 'Outdoor_time_end',
+                             'Outdoor. Time. Start [year:mm:dd:hh:mm]': 'Outdoor_time_start',
+                             'Perovskite. Band gap. Graded [TRUE/FALSE | TRUE/FALSE | ...]': 'Perovskite_band_gap_graded',
+                             'Perovskite. Composition. A-ions [Ion.1; Ion.2; … | Ion.3; … | ...]': 'Perovskite_composition_a_ions',
+                             'Perovskite. Composition. A-ions. Coefficients [Cof.1; Cof.2; … | Cof.3; … | ...]': 'Perovskite_composition_a_ions_coefficients',
+                             'Perovskite. Composition. B-ions [Ion.1; Ion.2; … | Ion.3; … | ...]': 'Perovskite_composition_b_ions',
+                             'Perovskite. Composition. B-ions. Coefficients [Cof.1; Cof.2; … | Cof.3; … | ...]': 'Perovskite_composition_b_ions_coefficients',
+                             'Perovskite. Composition. C-ions [Ion.1; Ion.2; … | Ion.3; … | ...]': 'Perovskite_composition_c_ions',
+                             'Perovskite. Composition. C-ions. Coefficients [Cof.1; Cof.2; … | Cof.3; … | ...]': 'Perovskite_composition_c_ions_coefficients',
+                             'Perovskite. Composition. Inorganic perovskite [TRUE/FALSE]': 'Perovskite_composition_inorganic',
+                             'Perovskite. Composition. Lead free [TRUE/FALSE]': 'Perovskite_composition_leadfree',
+                             'Perovskite. Composition. Perovskite ABC3 structure [TRUE/FALSE]': 'Perovskite_composition_perovskite_ABC3_structure',
+                             'Perovskite. Composition. Perovskite inspired structure [TRUE/FALSE]': 'Perovskite_composition_perovskite_inspired_structure',
+                             'Perovskite. Deposition. Aggregation state of reactants (Liquid/Gas/Solid) [Agr. 1 >> '
+                             'Agr. 2 >> ... | Agr. 3 >> … | Agr. 4 | ... ]':
+                                 'Perovskite_deposition_aggregation_state_of_reactants',
+                             'Perovskite. Deposition. Number of deposition steps': 'Perovskite_deposition_number_of_deposition_steps',
+                             'Perovskite. Deposition. Procedure [Proc. 1 >> Proc. 2 >> ... | Proc. 3 >> … | Proc. 4 | '
+                             '... ]': 'Perovskite_deposition_procedure'}
+
+kpi_question_scores = {
+    'Outdoor. Tested [TRUE/FALSE]': 1,
+    'Outdoor. Average over N number of cells': 1,
+    'Outdoor. Location. Coordinates [Latitude; Longitude] [decimal degrees]': 1,
+    'Outdoor. Installation. Number of solar tracking axis [0/1/2]': 1,
+    'Outdoor. Time. Start [year:mm:dd:hh:mm]': 1,
+    'Outdoor. Time. End [year:mm:dd:hh:mm]': 1,
+    'Outdoor. Potential bias. Range [U.min; U.max] or [U.constant] [V]': 1,
+    'Outdoor. Temperature. Range [T.min; T.max] or [T.constant] [deg. C]': 1,
+    'Outdoor. Periodic JV measurements [TRUE/FALSE]': 1,
+    'Outdoor. PCE. Burn in observed [TRUE/FALSE]': 1,
+    'Outdoor. Detaild weather data available [TRUE/FALSE]': 1,
+    'Outdoor. Spectral data available [TRUE/FALSE]': 1,
+    'Outdoor. Irradiance measured [TRUE/FALSE]': 1,
+    'Cell. Area. Measured [cm^2]': 5,
+    'JV. Light. Intensity [mW/cm^2]': 5,
+    'Perovskite. Band gap. Graded [TRUE/FALSE | TRUE/FALSE | ...]': 4,
+    'Perovskite. Deposition. Procedure [Proc. 1 >> Proc. 2 >> ... | Proc. 3 >> … | Proc. 4 | ... ]': 4,
+    'Perovskite. Deposition. Quenching induced crystallisation [TRUE/FALSE]': 4,
+    'HTL. Stack sequence [Mat.1; Mat.2; ... | Mat.3; ... | Mat.4 | ...]': 4,
+    'Backcontact. Stack sequence [Mat.1; Mat.2; ... | Mat.3; ... | Mat.4 | ...]': 4,
+    'JV. Measured [TRUE/FALSE]': 4,
+    'JV. Certified values [TRUE/FALSE]': 4,
+    'JV. Light. Masked cell [TRUE/FALSE]': 4,
+    'Stabilised performance. Measured [TRUE/FALSE]': 4,
+    'Stability. Measured [TRUE/FALSE]': 4,
+    'Stability. Light. UV filter [TRUE/FALSE]': 4,
+    'Stability. Relative humidity. Range [RH.min; RH.max] [%]': 4,
+    'Cell. Stack sequence [Mat.1; Mat.2; ... | Mat.3; ... | Mat.4 | ...]': 3.5,
+    'Cell. Flexible [TRUE/FALSE]': 3.5,
+    'Module [TRUE/FALSE]': 3.5,
+    'ETL. Deposition. Procedure [Proc. 1 >> Proc. 2 >> ... | Proc. 3 >> … | Proc. 4 | ... ]': 3.5,
+    'Perovskite. Composition. A-ions [Ion.1; Ion.2; … | Ion.3; … | ...]': 3.5,
+    'Perovskite. Composition. A-ions. Coefficients [Cof.1; Cof.2; … | Cof.3; … | ...]': 3.5,
+    'Perovskite. Composition. B-ions [Ion.1; Ion.2; … | Ion.3; … | ...]': 3.5,
+    'Perovskite. Composition. B-ions. Coefficients [Cof.1; Cof.2; … | Cof.3; … | ...]': 3.5,
+    'Perovskite. Composition. C-ions [Ion.1; Ion.2; … | Ion.3; … | ...]': 3.5,
+    'Perovskite. Composition. C-ions. Coefficients [Cof.1; Cof.2; … | Cof.3; … | ...]': 3.5,
+    'Perovskite. Deposition. Solvents [Sol.1; Sol.2 >> Sol.3; ... >> ... | Sol.4 >> … | Sol.5 | ... ]': 3.5,
+    'Cell. Architecture [nip/pin/ …]': 3,
+    'Module. Number of cells in module': 3,
+    'Perovskite. Deposition. Solvent annealing [TRUE/FALSE]': 3,
+    'Backcontact. Deposition. Procedure [Proc. 1 >> Proc. 2 >> ... | Proc. 3 >> … | Proc. 4 | ... ]': 3,
+    'Add. Lay. Front [TRUE/FALSE]': 3,
+    'Add. Lay. Back [TRUE/FALSE]': 3,
+    'Encapsulation [TRUE/FALSE]': 3,
+    'JV. Light. Wavelength range [lambda min; lambda max] or [lambda constant] [nm]': 3,
+    'EQE. Measured [TRUE/FALSE]': 3,
+    'Stability. Average over N number of cells': 3,
+    'Stability. Light. Wavelength range [lambda min; lambda max] or [lambda constant] [nm]': 3,
+    'Stability. Potential bias. Range [U.min; U.max] or [U.constant] [V]': 3,
+    'Stability. Temperature. Range [T.min; T.max] or [T.constant] [deg. C]': 3,
+    'Stability. PCE. Burn in observed [TRUE/FALSE]': 3,
+    'Cell. Semitransparent [TRUE/FALSE]': 2.5,
+    'ETL. Stack sequence [Mat.1; Mat.2; ... | Mat.3; ... | Mat.4 | ...]': 2.5,
+    'Perovskite. Composition. Perovskite inspired structure [TRUE/FALSE]': 2.5,
+    'Perovskite. Deposition. Number of deposition steps': 2.5,
+    'Perovskite. Deposition. Aggregation state of reactants (Liquid/Gas/Solid) [Agr. 1 >> Agr. 2 >> ... | Agr. 3 >> … '
+    '| Agr. 4 | ... ]': 2.5,
+    'Cell. Semitransparent. Average visible transmittance. Wavelength range [lambda_min; lambda_max]': 2,
+    'Module. JV data recalculated per cell [TRUE/FALSE]': 2,
+    'Substrate. Stack sequence [Mat.1; Mat.2; ... | Mat.3; ... | Mat.4 | ...]': 2,
+    'Perovskite. Composition. Inorganic perovskite [TRUE/FALSE]': 2,
+    'Perovskite. Composition. Lead free [TRUE/FALSE]': 2,
+    'JV. Average over N number of cells': 2,
+    'Stability. Periodic JV measurements [TRUE/FALSE]': 2,
+    'Stability. Flexible cell. Number of bending cycles': 2,
+    'Perovskite. Single crystal [TRUE/FALSE]': 1.5,
+    'Perovskite. Dimension. 0D (Quantum dot) [TRUE/FALSE]': 1.5,
+    'Perovskite. Dimension. 2D [TRUE/FALSE]': 1.5,
+    'Perovskite. Dimension. 2D/3D mixture [TRUE/FALSE]': 1.5,
+    'Perovskite. Dimension. 3D [TRUE/FALSE]': 1.5,
+    'Cell. Number of cells per substrate': 1,
+    'Perovskite. Dimension. List of layers [Dim.1 | Dim.2 | …]': 1,
 }
 
 best_5p_question_to_field= {'Substrate. Stack sequence [Mat.1; Mat.2; ... | '
