@@ -95,6 +95,7 @@ def create_questions_db(output_path: str) -> None:
     df = counted_tokens_data(df)
     df = add_question_type(df)
     df = add_is_kpi_field(df)
+    df = add_question_score_column(df)
     df.to_csv(output_path, index=False)
 
 
@@ -132,6 +133,13 @@ def add_question_type(df: pd.DataFrame) -> pd.DataFrame:
 
 def add_is_kpi_field(df: pd.DataFrame) -> pd.DataFrame:
     df[IS_KPI_FIELD] = df[FIELD_NAME].apply(lambda x: x is not None)
+    return df
+
+
+def add_question_score_column(df: pd.DataFrame) -> pd.DataFrame:
+    df[QUESTION_SCORE] = df[PROTOCOL_QUESTION].apply(
+        lambda x: kpi_question_scores[x] if x in kpi_question_scores.keys() else None
+    )
     return df
 
 
