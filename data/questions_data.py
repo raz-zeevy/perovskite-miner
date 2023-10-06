@@ -4,6 +4,13 @@ from data.questions_const import *
 from data.utils import load_perovskite_data
 from datetime import datetime
 
+FT_FLOAT = 'float'
+FT_SEQ_SUFFIX = "_seq"
+FT_STRING = 'string'
+FT_INT = 'int'
+FT_DATE = 'date'
+FT_BOOLEAN = 'boolean'
+
 DB_PATH = "../dataset/questions/questions_db.csv"
 
 def format_questions_and_save_5_4(
@@ -101,24 +108,23 @@ def is_date(string: str) -> bool:
     except ValueError:
         return False
 
-
 def infer_question_type(example_answer: str) -> str:
     example_answer = str(example_answer)
     if example_answer == '':
         return ''
     if '|' in example_answer:
         first_part_in_seq = example_answer.split('|')[0].strip()
-        return 'sequence of ' + infer_question_type(first_part_in_seq)
+        return infer_question_type(first_part_in_seq)+ FT_SEQ_SUFFIX
     elif 'TRUE' in example_answer.upper() or 'FALSE' in example_answer.upper():
-        return 'boolean'
+        return FT_BOOLEAN
     elif is_date(example_answer):
-        return 'date'
+        return FT_DATE
     elif example_answer.replace(".", "").isdigit():
         if '.' in example_answer:
-            return 'float'
-        return 'int'
+            return FT_FLOAT
+        return FT_INT
     else:
-        return 'string'
+        return FT_STRING
 
 
 def add_question_type(df: pd.DataFrame) -> pd.DataFrame:

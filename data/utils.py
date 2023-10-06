@@ -147,12 +147,16 @@ Name : Raz
 is_girl : True
 is_girl : False
 """
-def mock_response(fields,  n_missing_fields, n_missing_values,
-                  wrong_values, wrong_fields, seed=42,):
+def mock_response(fields,  n_missing_fields=0, n_missing_values=0,
+                  wrong_values=[], wrong_fields=[], seed=42,):
     np.random.seed(seed)
     papers = sample_paper_by_devices(n=1, filter_by_available=False)
     filters_paper = papers.iloc[0].loc[fields]
-    formatted_strings = [f"{field.reaplce('_', ' ').capitalize()} : {value}"
+    for _ in range(n_missing_values):
+        filters_paper[np.random.choice(filters_paper.index)] = np.nan
+    for _ in range(n_missing_fields):
+        filters_paper.pop(np.random.choice(filters_paper.index))
+    formatted_strings = [f"{field.replace('_', ' ').capitalize()} : {value}"
                          for field, value in filters_paper.items()]
     mockup = "\n".join(formatted_strings)
     return mockup
