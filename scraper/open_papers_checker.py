@@ -8,7 +8,7 @@ def main():
     papers_data = []
     open_papers_doi = []
 
-    with open(r"../dateset/papers/papers_metadata.txt", 'w') as fp:
+    with open(r"../dataset/papers/papers_metadata.txt", 'w') as fp:
         for i, doi in enumerate(doi_list):
             if i % 5 == 0:
                 print(f"Done {i} papers")
@@ -24,7 +24,7 @@ def main():
 
     print("got metadata for all papers")
     # save the list of open papers to a text file
-    with open(r"../dateset/papers/open_papers_doi.txt", 'w') as fp:
+    with open(r"../dataset/papers/open_papers_doi.txt", 'w') as fp:
         for doi in open_papers_doi:
             fp.write("%s, " % doi)
 
