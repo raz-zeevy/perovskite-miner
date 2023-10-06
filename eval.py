@@ -6,6 +6,8 @@ the mean loss is
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import numpy as np
+from data.questions_data import *
+import data.utils
 from data.utils import load_perovskite_data, \
     sample_paper_by_devices, sample_disjoint_devices, filter_by_kpi
 import pandas as pd
@@ -116,9 +118,8 @@ def calc_eval_metric_kpi_stats(stats: dict) -> dict:
         'min': dict(mean=np.mean(stats['min']), sd=np.std(stats['min'])),
     }
 
-
 def eval_random_error(n=100):
-    stats = calc_random_error_stats(load_pervo_data(), n)
+    stats = calc_random_error_stats(load_perovskite_data(), n)
     plot_stats(stats)
 
 def compare_results_from_db(results_path="dataset/papers/downloads/10.1002_adem.201900288_api_results.csv",
@@ -132,19 +133,75 @@ def compare_results_from_db(results_path="dataset/papers/downloads/10.1002_adem.
         print(f"Error rate: {round(error_rate, 3)}%")
     print(true_res)
 
-def add_real_results(results_path, doi_number):
-    pass
+class Evaluator:
+    def __init__(self):
+        self.q_df = data.utils.load_questions_db()
+
+    def eval_field(self, model_val, field_type, expected_val) -> float:
+        if model_val != model_val and expected_val != expected_val:
+            return 1
+        if model_val != model_val:
+            return 0
+        elif field_type.endswith(FT_SEQ_SUFFIX):
+            # seq_items = value.split("|")
+            # seq_items = [item for item in seq_items if item != '']
+            # for value in seq_items:
+            #     self.eval_field(value, type[:-len(FT_SEQ_SUFFIX)])
+            return model_val.strip() == expected_val.strip()
+        elif ";" in str(model_val) or ";" in str(expected_val):
+            return expected_val == model_val
+        elif field_type == FT_FLOAT:
+            expected_val = float(expected_val)
+            try:
+                model_val = float(model_val)
+            except ValueError:
+                return 0
+            return np.isclose(model_val, expected_val,
+                          atol=1e-3)
+        elif field_type == FT_BOOLEAN:
+            expected_val = eval(expected_val)
+            try:
+                model_val = eval(model_val)
+            except ValueError:
+                return 0
+            return model_val == expected_val
+        elif field_type == FT_STRING:
+            return model_val.strip() == expected_val.strip()
+        elif field_type == FT_INT:
+            expected_val = eval(expected_val)
+            try:
+                model_val = eval(model_val)
+            except ValueError:
+                return 0
+            return model_val == expected_val
+        elif field_type == FT_DATE:
+            return model_val == expected_val
+        else:
+            print(f"Unknown field type: {field_type}")
+            return 0
+    def eval(self, res_path : str):
+        df = pd.read_csv(res_path)
+        merged_df = pd.merge(df, self.q_df, left_on='db_field_name',
+                             right_on=FIELD_NAME,
+                             how='left')
+        merged_df['score'] = merged_df.apply(
+            lambda row : float(self.eval_field(row["ai_answer"],
+                                       row[QUESTION_TYPE],
+                                       row["db_answer"])),
+            axis=1)
+        merged_df = merged_df[["db_answer","ai_answer",'score',QUESTION_TYPE]]
+        print("done")
+def evaluate_combined_res(res_path : str):
+    evaluator = Evaluator()
+    evaluator.eval(res_path)
 
 
 if __name__ == '__main__':
     np.random.seed(42)
     # eval_random_error(n=100)
-    results_path = "dataset/db_vs_model_output/10.1016_j.ces.2019.01.003_combined_results.csv"
-    doi_number = '10.1016/j.ces.2019.01.003'
-    compare_results_from_db(
-        results_path=results_path,
-        doi_number=doi_number
-    )
+    results_path = "dataset/db_vs_model_output/10.1016_j.ces.2019.01" \
+                   ".003_combined_fake_results.csv"
+    evaluate_combined_res(results_path)
     # df = load_pervo_data()
     # y_true_all = sample_paper_by_devices(df, 5, 5)
     # y_true = y_true_all.iloc[0]
