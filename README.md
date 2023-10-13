@@ -1,3 +1,6 @@
+<img src="./media/logo.png" alt="Perovskite Miner Logo" width="300"/>
+
+
 # Perovskite Miner
 
 Welcome to the `perovskite-miner` project! This tool harnesses the power of AI, specifically Large Language Models (LLMs), to automatically extract data from perovskite research papers. The extracted data can be transformed and integrated into the Perovskite Database. Whether you're a researcher, developer, or enthusiast in the field of perovskite materials, this project offers a state-of-the-art solution to streamline data collection and database population.
