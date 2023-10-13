@@ -2,14 +2,28 @@
 
 Welcome to the `perovskite-miner` project! This tool harnesses the power of AI, specifically Large Language Models (LLMs), to automatically extract data from perovskite research papers. The extracted data can be transformed and integrated into the Perovskite Database. Whether you're a researcher, developer, or enthusiast in the field of perovskite materials, this project offers a state-of-the-art solution to streamline data collection and database population.
 
+**Authors: Raz Zeevy, Iris Burmistrov**
+
 ## Table of Contents
 
+- [Introduction](#introduction)
 - [About the Project](#about-the-project)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
+
+## Introduction
+
+Perovskite solar cells have emerged as a promising frontier in the realm of renewable energy. These solar cells, characterized by their unique crystallographic structure, have garnered significant attention due to their potential to revolutionize solar energy harnessing. The research landscape is vibrant, with continuous efforts aimed at developing more efficient and stable perovskite solar cells.
+
+Given the rapid pace of advancements, a multitude of research papers are published every week, each contributing valuable insights and data to the field. The vision behind the **Perovskite Database** is to centralize this wealth of information, offering a convenient platform for filtering and analysis. Such a consolidated database can significantly enhance collaboration between research groups worldwide, propelling the pace of scientific discoveries.
+
+Our project, `perovskite-miner`, is a pivotal step towards realizing this vision. By automating the extraction of data from the plethora of research papers, it aims to keep the Perovskite Database updated with the latest findings. This continuous influx of fresh data can serve as the driving force behind the Perovskite Database project, fostering a collaborative environment and accelerating advancements in perovskite solar cell research.
+
+## Acknowledgment
+We would like to extend our heartfelt gratitude to **Eva Unger's group** at **Helmholtz-Zentrum Berlin**. Their invaluable support, hosting, and contributions have been instrumental in the realization of this project. Their expertise and guidance have been a cornerstone in our journey, and we deeply appreciate their unwavering assistance.
 
 ## About the Project
 
@@ -82,4 +96,4 @@ This project is licensed under the MIT License. See the `LICENSE` file for more 
 
 ## Contact
 
-For any questions or feedback, please reach out to the repository owner or open an issue.
+For any questions or feedback, please reach out to raz3zeevy@gmail.com or to iris.burmistrov@mail.huji.ac.il 
