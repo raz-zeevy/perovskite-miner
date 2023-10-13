@@ -14,20 +14,20 @@ Welcome to the `perovskite-miner` project! This tool harnesses the power of AI, 
 - [About the Project](#about-the-project)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Contributing](#contributing)
+- [Contributing And Contact](#contributing)
 - [License](#license)
-- [Contact](#contact)
 
 ## Introduction
 
 Perovskite solar cells have emerged as a promising frontier in the realm of renewable energy. These solar cells, characterized by their unique crystallographic structure, have garnered significant attention due to their potential to revolutionize solar energy harnessing. The research landscape is vibrant, with continuous efforts aimed at developing more efficient and stable perovskite solar cells.
 
-Given the rapid pace of advancements, a multitude of research papers are published every week, each contributing valuable insights and data to the field. The vision behind the **Perovskite Database** is to centralize this wealth of information, offering a convenient platform for filtering and analysis. Such a consolidated database can significantly enhance collaboration between research groups worldwide, propelling the pace of scientific discoveries.
+Given the rapid pace of advancements, a multitude of research papers are published every week, each contributing valuable insights and data to the field. The vision behind the **Perovskite Database**, created by [Jesper Kemist](https://github.com/Jesperkemist/perovskitedatabase), is to centralize this wealth of information, offering a convenient platform for filtering and analysis. Such a consolidated database can significantly enhance collaboration between research groups worldwide, propelling the pace of scientific discoveries.
 
 Our project, `perovskite-miner`, is a pivotal step towards realizing this vision. By automating the extraction of data from the plethora of research papers, it aims to keep the Perovskite Database updated with the latest findings. This continuous influx of fresh data can serve as the driving force behind the Perovskite Database project, fostering a collaborative environment and accelerating advancements in perovskite solar cell research.
 
 ## Acknowledgment
 We would like to extend our heartfelt gratitude to **Eva Unger's group** at **Helmholtz-Zentrum Berlin**. Their invaluable support, hosting, and contributions have been instrumental in the realization of this project. Their expertise and guidance have been a cornerstone in our journey, and we deeply appreciate their unwavering assistance.
+Additionally, our sincere thanks go to [Jesper Kemist](https://github.com/Jesperkemist) for creating the **Perovskite Database** project. His initiative has been instrumental in shaping the direction of our work.
 
 ## About the Project
 
@@ -90,17 +90,16 @@ Once installed, you can utilize the various modules and scripts provided in this
 
 For detailed usage instructions and examples, refer to the individual script documentation and comments.
 
-## Contributing
+## Contributing and Contact
 
 Contributions are always welcome! If you have suggestions, bug reports, or want to contribute to the code, please open an issue or submit a pull request.
+For any questions or feedback, please reach out to raz3zeevy@gmail.com or to iris.burmistrov@mail.huji.ac.il 
+
 
 ## License
 
 This project is licensed under the MIT License. See the `LICENSE` file for more details.
 
-## Contact
-
-For any questions or feedback, please reach out to raz3zeevy@gmail.com or to iris.burmistrov@mail.huji.ac.il 
 
 <p align="center">
   <img src="./media/logo.png" alt="Perovskite Miner Logo" width="300"/>
