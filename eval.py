@@ -6,12 +6,13 @@ the mean loss is
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import numpy as np
+import data
 from data.questions_data import *
-import data.utils
-from data.utils import load_perovskite_data, \
-    sample_paper_by_devices, sample_disjoint_devices, filter_by_kpi
 import pandas as pd
 from data.questions_const import *
+from data.utils import load_perovskite_data, sample_disjoint_devices, filter_by_kpi
+import os
+
 
 w = {
 
@@ -126,11 +127,12 @@ def eval_random_error(n=100):
     plot_stats(stats)
 
 
-def compare_results_from_db(
-        results_path="dataset/papers/downloads/10.1002_adem.201900288_api_results.csv",
-        doi_number='10.1002/adem.201900288'):
-    ai_res = pd.read_csv(results_path)
+
+def compare_results_from_db():
+    results_path = "dataset/papers/downloads/10.1002_adem.201900288_api_results.csv"
+    ai_res = pd.read_csv(results_path).iloc[1]
     pervo_data = load_perovskite_data()
+    doi_number = '10.1002/adem.201900288'
     true_res = pervo_data[pervo_data['Ref_DOI_number'] == doi_number]
     filter_by_kpi(true_res)
     for i, y_pred in true_res.iterrows():
@@ -206,6 +208,16 @@ def evaluate_combined_res(res_path: str):
     score = evaluator.eval(res_path)
     return score
 
+def evaluate_model():
+    for file in os.listdir('dataset/db_vs_model_output'):
+        if file.endswith(".csv") and not file.startswith("out_10"):
+            df = pd.read_csv(os.path.join('dataset/db_vs_model_output', file))
+            y_db = df.iloc[3]
+            y_ai = df.iloc[2]
+            error_rate = compute_error(y_ai, y_db)
+            print(f"Error rate: {round(error_rate, 3)}%")
+
+
 
 if __name__ == '__main__':
     np.random.seed(42)
@@ -226,3 +238,9 @@ if __name__ == '__main__':
     # #                             axis=1)
     # a = 3
     # print("done")
+
+    compare_results_from_db()
+
+    evaluate_model()
+
+
