@@ -76,17 +76,25 @@ To get started with `perovskite-miner`, follow these installation steps:
 
 Once installed, you can utilize the various modules and scripts provided in this repository. Here's a brief overview of how to use some of the main features:
 
-- **Data Analysis**:
-  Navigate to the `data` directory and run the desired analysis script. For example:
+- **Data Extraction**:
+ To use the main function, you need to provide the path to the PDF file you want to process:
   ```bash
-  python perovskite_analysis.py
+python main.py /path/to/your/pdf/file.pdf
   ```
+This will extract data from the specified PDF and save the results in the results/ directory.
 
 - **API Integrations**:
   The `apis` directory contains scripts for integrating with machine learning models. Run the desired API script as needed.
 
 - **Data Scraping**:
   Use the scripts in the `scraper` directory to gather the latest research papers and data.
+
+- **For Developers**
+ If you're a developer or you're debugging the tool, there's an optional fake argument you can use:
+  ```bash
+python main.py /path/to/your/pdf/file.pdf --fake True
+  ```
+ The fake argument accepts boolean values (True or False). When set to True, the tool will use a mock model for data extraction (useful for testing and debugging). When set to False or omitted, the tool will use the actual model for data extraction.
 
 For detailed usage instructions and examples, refer to the individual script documentation and comments.
 
