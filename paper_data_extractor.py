@@ -1,3 +1,4 @@
+import time
 from pandas import DataFrame
 from apis.gpt_api import post_paper_prompt
 from prompt_engineering.prompt_engineering import PaperPrompt
@@ -91,7 +92,6 @@ def results_to_df(res, kpi_fields: list):
     res_df = res_df.append(matched_values, ignore_index=True)
     return res_df
 
-
 def mine_paper(paper_pdf_path, fake=False):
     def output_name(paper_pdf_path):
         split_name = paper_pdf_path.split(".")
@@ -116,6 +116,7 @@ def create_results_vs_db_output(results_df, paper_doi, fake=False):
     """
     Create a csv file that contains the results of the GPT-3 API and the
     database side by side.
+    :param fake:
     :param results_df: the results of the GPT-3 API.
     :param paper_doi: paper DOI number.
     """
@@ -138,7 +139,6 @@ def create_results_vs_db_output(results_df, paper_doi, fake=False):
     if fake:
         output_name = output_name.replace("combined", "combined_fake")
     results_df.to_csv(output_name, index=False)
-    print(f"saved combined results for paper {paper_doi}")
 
 
 if __name__ == '__main__':
@@ -146,9 +146,13 @@ if __name__ == '__main__':
                       '10.1016/j.jpowsour.2015.05.106', '10.1016/j.solmat.2016.07.037']:
         try:
             fake = False
+            start_time = time.time()
             df_result = mine_paper_by_doi(paper_doi, fake=fake)
-            create_results_vs_db_output(df_result, paper_doi, fale=fake)
+            create_results_vs_db_output(df_result, paper_doi, fake=fake)
+            print(f"saved combined results for paper {paper_doi} - "
+                  f"{round((time.time()-start_time)/60,2)} min")
             # filter_non_boolean_questions()
         except Exception as e:
             print(f"Parse Failed: for paper:{paper_doi}" + str(e))
-            continue
+            raise e
+
