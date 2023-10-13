@@ -3,9 +3,9 @@ import tiktoken
 from config import OPEN_AI_KEY
 import openai
 
-MODEL_4 = 'gpt-3.5-turbo'
-MODEL_16 = 'gpt-3.5-turbo-16k'
-
+GPT_3_T_4 = 'gpt-3.5-turbo'
+GPT_3_T_16 = 'gpt-3.5-turbo-16k'
+GPT_4 = 'gpt-4'
 
 def openai_count_tokens(input_text):
     encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
@@ -30,7 +30,7 @@ def access_chat_gpt_3(prompts_text: [],
     prompts = [dict(role="user",
                     content=txt) for txt in prompts_text]
     chat_completion = openai.ChatCompletion.create(
-        model=MODEL_16,
+        model=GPT_3_T_16,
         messages=prompts)
     res = chat_completion.choices[0].message.content
     # check the chat_completion.usage to check for overloads and actual
