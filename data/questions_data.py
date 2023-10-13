@@ -83,6 +83,7 @@ def counted_tokens_data(questions_df : pd.DataFrame) -> pd.DataFrame:
         lambda x: count_tokens(x))
     return merged
 
+
 def create_questions_db(output_path: str) -> None:
     protocol_path = r'../dataset/questions/Extraction protocolls version 5_4.xlsx'
     sheet_name = 'Master'
@@ -98,7 +99,15 @@ def create_questions_db(output_path: str) -> None:
     df = counted_tokens_data(df)
     df = add_question_type(df)
     df = add_is_kpi_field(df)
+    df = add_question_score_column(df)
     df.to_csv(output_path, index=False)
+
+
+def add_question_score_column(df: pd.DataFrame) -> pd.DataFrame:
+    df[QUESTION_SCORE] = df[PROTOCOL_QUESTION].apply(
+        lambda x: kpi_question_scores[x] if x in kpi_question_scores.keys() else None
+    )
+    return df
 
 
 def is_date(string: str) -> bool:
@@ -107,6 +116,7 @@ def is_date(string: str) -> bool:
         return True
     except ValueError:
         return False
+
 
 def infer_question_type(example_answer: str) -> str:
     example_answer = str(example_answer)
