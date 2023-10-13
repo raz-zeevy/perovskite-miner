@@ -1,4 +1,3 @@
-import dateutil
 from pandas import DataFrame
 from apis.gpt_api import post_paper_prompt
 from prompt_engineering.prompt_engineering import PaperPrompt
@@ -6,7 +5,6 @@ import datetime
 from data.utils import *
 import os
 import json
-import requests
 
 
 def log_gpt_results_json(p_prompt: PaperPrompt, res, pdf_path,
@@ -131,22 +129,6 @@ def create_results_vs_db_output(results_df, paper_doi):
     results_df = pd.DataFrame(np.vstack([results_df.columns, results_df]))
     results_df.T.to_csv(RESULTS_FOLDER + f"/{sanitize(paper_doi)}_combined_results.csv", index=False)
     print(f"saved combined results for paper {paper_doi}")
-
-
-# todo: maybe should be in paper scraper?
-# todo: check this works... code from Pepe
-def get_paper_metadata(doi_number):
-    r = requests.get(f'https://api.crossref.org/works/{doi_number}')
-    temp_dict = r.json()
-    # make sure the doi has the prefix https://doi.org/
-    if doi_number.startswith('10.'):
-        doi_number = 'https://doi.org/' + doi_number
-    given_name = temp_dict['message']['author'][0]['given']
-    family_name = temp_dict['message']['author'][0]['family']
-    journal = temp_dict['message']['container-title'][0]
-    publication_date = dateutil.parser.parse(temp_dict['message']['created']['date-time'])
-    lead_author = given_name + ' ' + family_name
-    return doi_number, journal, publication_date, lead_author
 
 
 if __name__ == '__main__':

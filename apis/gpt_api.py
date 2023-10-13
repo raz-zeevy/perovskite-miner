@@ -3,9 +3,9 @@ import tiktoken
 from config import OPEN_AI_KEY
 import openai
 
-MODEL_4 = 'gpt-3.5-turbo'
-MODEL_16 = 'gpt-3.5-turbo-16k'
-
+GPT_3_T_4 = 'gpt-3.5-turbo'
+GPT_3_T_16 = 'gpt-3.5-turbo-16k'
+GPT_4 = 'gpt-4'
 
 def openai_count_tokens(input_text):
     encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
@@ -26,18 +26,11 @@ def post_paper_prompt(p_prompts, fake=False):
 
 def access_chat_gpt_3(prompts_text: [],
                       fake=False):
-    if fake:
-        return mock_response
     openai.api_key = OPEN_AI_KEY
-    # list models
-    # models = openai.Model.list()
-    # print the first model's id
-    # print(models.data[0].id)
-    # create a chat completion
     prompts = [dict(role="user",
                     content=txt) for txt in prompts_text]
     chat_completion = openai.ChatCompletion.create(
-        model=MODEL_16,
+        model=GPT_3_T_16,
         messages=prompts)
     res = chat_completion.choices[0].message.content
     # check the chat_completion.usage to check for overloads and actual
@@ -46,9 +39,9 @@ def access_chat_gpt_3(prompts_text: [],
 
 
 dummy_response = "DOI: 10.1016/j.jacc.2019.11.056\n" \
-               "PMID: 31918846\n" \
-               "Number of patients: 1,000\n" \
-               "Patients age: 50-60\n"
+                 "PMID: 31918846\n" \
+                 "Number of patients: 1,000\n" \
+                 "Patients age: 50-60\n"
 
 mock_response = \
     """Ref DOI number: 10.1002/adem.201900288

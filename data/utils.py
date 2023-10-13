@@ -25,7 +25,8 @@ def get_kpi_fields():
     return keys
 
 
-def load_perovskite_data(db_path='dataset/Perovskite_database_content_all_data.csv'):
+def load_perovskite_data(
+        db_path='dataset/Perovskite_database_content_all_data.csv'):
     try:
         df = pd.read_csv(db_path, low_memory=False)
     except FileNotFoundError:
@@ -66,7 +67,7 @@ def sample_paper_by_devices(df: pd.DataFrame = None,
     :param filter_by_available:
     :return:
     """
-    if df is None :
+    if df is None:
         df = load_perovskite_data()
     if filter_by_available:
         df = filter_by_available_papers(df)
@@ -82,11 +83,13 @@ def filter_by_available_papers(df: pd.DataFrame):
     papers = os.listdir(papers_folder)
 
     papers = [paper[:-4] for paper in papers]
-    df = df[df['Ref_DOI_number'].apply(lambda x: sanitize(str(x))).isin(papers)]
+    df = df[
+        df['Ref_DOI_number'].apply(lambda x: sanitize(str(x))).isin(papers)]
     return df
 
 
-def common_fields(kpi_fields: List[str], non_boolean_questions: List[str]) -> List[str]:
+def common_fields(kpi_fields: List[str], non_boolean_questions: List[str]) -> \
+        List[str]:
     return [field for field in kpi_fields if field in non_boolean_questions]
 
 
@@ -96,16 +99,19 @@ def filter_non_boolean_questions():
             df = pd.read_csv(os.path.join(RESULTS_FOLDER, file))
             df = df.set_index(df.columns[0])
             df = df.T
-            df = df[common_fields(get_kpi_fields(), get_non_boolean_questions())]
+            df = df[
+                common_fields(get_kpi_fields(), get_non_boolean_questions())]
 
             # should be +- 36 columns and 4 (3?) rows
             clean_results = pd.DataFrame(np.vstack([df.columns, df]))
-            clean_results.T.to_csv(RESULTS_FOLDER + f"/clean_out_{file}", index=False)
+            clean_results.T.to_csv(RESULTS_FOLDER + f"/clean_out_{file}",
+                                   index=False)
 
 
 def get_non_boolean_questions():
     q_df = load_questions_db()
-    return q_df[q_df[QUESTION_TYPE] != 'boolean']['field_name'].dropna().to_list()
+    return q_df[q_df[QUESTION_TYPE] != 'boolean'][
+        'field_name'].dropna().to_list()
 
 
 def load_questions_db():
@@ -131,6 +137,29 @@ def calculate_std(token_counts):
     variance = sum((x - mean) ** 2 for x in token_counts) / len(token_counts)
     std_dev = math.sqrt(variance)
     return std_dev
+
+"""
+Wrong Values
+Name : Iris
+Name : askd
+Name : Raz
+
+is_girl : True
+is_girl : False
+"""
+def mock_response(fields,  n_missing_fields=0, n_missing_values=0,
+                  wrong_values=[], wrong_fields=[], seed=42,):
+    np.random.seed(seed)
+    papers = sample_paper_by_devices(n=1, filter_by_available=False)
+    filters_paper = papers.iloc[0].loc[fields]
+    for _ in range(n_missing_values):
+        filters_paper[np.random.choice(filters_paper.index)] = np.nan
+    for _ in range(n_missing_fields):
+        filters_paper.pop(np.random.choice(filters_paper.index))
+    formatted_strings = [f"{field.replace('_', ' ').capitalize()} : {value}"
+                         for field, value in filters_paper.items()]
+    mockup = "\n".join(formatted_strings)
+    return mockup
 
 
 if __name__ == '__main__':

@@ -6,9 +6,12 @@ the mean loss is
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import numpy as np
-from data_exploration.utils import load_pervo_data, \
+from data.questions_data import *
+import data.utils
+from data.utils import load_perovskite_data, \
     sample_paper_by_devices, sample_disjoint_devices, filter_by_kpi
 import pandas as pd
+from data.questions_const import *
 
 w = {
 
@@ -119,14 +122,15 @@ def calc_eval_metric_kpi_stats(stats: dict) -> dict:
 
 
 def eval_random_error(n=100):
-    stats = calc_random_error_stats(load_pervo_data(), n)
+    stats = calc_random_error_stats(load_perovskite_data(), n)
     plot_stats(stats)
 
-def compare_results_from_db():
-    results_path = "dataset/papers/downloads/10.1002_adem.201900288_api_results.csv"
-    ai_res = pd.read_csv(results_path).iloc[1]
-    pervo_data = load_pervo_data()
-    doi_number = '10.1002/adem.201900288'
+
+def compare_results_from_db(
+        results_path="dataset/papers/downloads/10.1002_adem.201900288_api_results.csv",
+        doi_number='10.1002/adem.201900288'):
+    ai_res = pd.read_csv(results_path)
+    pervo_data = load_perovskite_data()
     true_res = pervo_data[pervo_data['Ref_DOI_number'] == doi_number]
     filter_by_kpi(true_res)
     for i, y_pred in true_res.iterrows():
@@ -134,10 +138,81 @@ def compare_results_from_db():
         print(f"Error rate: {round(error_rate, 3)}%")
     print(true_res)
 
+
+class Evaluator:
+    def __init__(self):
+        self.q_df = data.utils.load_questions_db()
+
+    def eval_field(self, model_val, field_type, expected_val) -> float:
+        if model_val != model_val and expected_val != expected_val:
+            return 1
+        if model_val != model_val:
+            return 0
+        elif field_type.endswith(FT_SEQ_SUFFIX):
+            # seq_items = value.split("|")
+            # seq_items = [item for item in seq_items if item != '']
+            # for value in seq_items:
+            #     self.eval_field(value, type[:-len(FT_SEQ_SUFFIX)])
+            return model_val.strip() == expected_val.strip()
+        elif ";" in str(model_val) or ";" in str(expected_val):
+            return expected_val == model_val
+        elif field_type == FT_FLOAT:
+            expected_val = float(expected_val)
+            try:
+                model_val = float(model_val)
+            except ValueError:
+                return 0
+            return np.isclose(model_val, expected_val,
+                              atol=1e-3)
+        elif field_type == FT_BOOLEAN:
+            expected_val = eval(expected_val)
+            try:
+                model_val = eval(model_val)
+            except ValueError:
+                return 0
+            return model_val == expected_val
+        elif field_type == FT_STRING:
+            return model_val.strip() == expected_val.strip()
+        elif field_type == FT_INT:
+            expected_val = eval(expected_val)
+            try:
+                model_val = eval(model_val)
+            except ValueError:
+                return 0
+            return model_val == expected_val
+        elif field_type == FT_DATE:
+            return model_val == expected_val
+        else:
+            print(f"Unknown field type: {field_type}")
+            return 0
+
+    def eval(self, res_path: str):
+        df = pd.read_csv(res_path)
+        merged_df = pd.merge(df, self.q_df, left_on='db_field_name',
+                             right_on=FIELD_NAME,
+                             how='left')
+        merged_df['score'] = merged_df.apply(
+            lambda row: float(self.eval_field(row["ai_answer"],
+                                              row[QUESTION_TYPE],
+                                              row["db_answer"])),
+            axis=1)
+        merged_df = merged_df[
+            ["db_answer", "ai_answer", 'score', QUESTION_TYPE]]
+        return round(merged_df["score"].sum()/len(merged_df)*100,2)
+
+
+def evaluate_combined_res(res_path: str):
+    evaluator = Evaluator()
+    score = evaluator.eval(res_path)
+    return score
+
+
 if __name__ == '__main__':
     np.random.seed(42)
     # eval_random_error(n=100)
-    compare_results_from_db()
+    results_path = "dataset/db_vs_model_output/10.1016_j.ces.2019.01" \
+                   ".003_combined_fake_results.csv"
+    print(evaluate_combined_res(results_path))
     # df = load_pervo_data()
     # y_true_all = sample_paper_by_devices(df, 5, 5)
     # y_true = y_true_all.iloc[0]
