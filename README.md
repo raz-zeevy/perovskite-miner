@@ -93,6 +93,7 @@ For detailed usage instructions and examples, refer to the individual script doc
 ## Contributing and Contact
 
 Contributions are always welcome! If you have suggestions, bug reports, or want to contribute to the code, please open an issue or submit a pull request.
+
 For any questions or feedback, please reach out to raz3zeevy@gmail.com or to iris.burmistrov@mail.huji.ac.il 
 
 
