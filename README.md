@@ -1,5 +1,6 @@
-<img src="./media/logo.png" alt="Perovskite Miner Logo" width="300"/>
-
+<p align="center">
+  <img src="./media/logo.png" alt="Perovskite Miner Logo" width="300"/>
+</p>
 
 # Perovskite Miner
 
@@ -100,3 +101,7 @@ This project is licensed under the MIT License. See the `LICENSE` file for more 
 ## Contact
 
 For any questions or feedback, please reach out to raz3zeevy@gmail.com or to iris.burmistrov@mail.huji.ac.il 
+
+<p align="center">
+  <img src="./media/logo.png" alt="Perovskite Miner Logo" width="300"/>
+</p>
