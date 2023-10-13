@@ -72,6 +72,8 @@ def infer_field_from_question(question: str) -> (int, str):
             print("question: ", question)
             print("field: ", field)
             return i, field
+
+
 def counted_tokens_data(questions_df : pd.DataFrame) -> pd.DataFrame:
     from apis.gpt_api import openai_count_tokens as count_tokens
     pervo_df = load_perovskite_data()
