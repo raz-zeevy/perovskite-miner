@@ -73,8 +73,14 @@ To get started with `perovskite-miner`, follow these installation steps:
    ```
 
 ## Usage
+Before using the tool, ensure you have a `config.py` file in the root directory of the project. This file should contain your API key for the Large Language Model (LLM) integration.
+**config.py example:**
+  ```bash
+  OPEN_AI_KEY = "YOUR_API_KEY_HERE"
+  ```
+Replace `YOUR_API_KEY_HERE` with your actual API key.
 
-Once installed, you can utilize the various modules and scripts provided in this repository. Here's a brief overview of how to use some of the main features:
+Once the `config.py` is set up, you can utilize the various modules and scripts provided in this repository. Here's a brief overview of how to use some of the main features:
 
 - **Data Extraction**:
  To use the main function, you need to provide the path to the PDF file you want to process:
