@@ -112,7 +112,7 @@ This project is licensed under the MIT License. See the `LICENSE` file for more 
 
 
 <p align="center">
-  <img src="./media/logo.png" alt="Perovskite Miner Logo" width="300"/>
-  <img src="./media/hzb-logo.png" alt="Helmholz-Zentrum" width="300"/>
+  <img src="./media/logo.png" alt="Perovskite Miner Logo" width="175"/>
+  <img src="./media/hzb-logo.jpg" alt="Helmholz-Zentrum" width="250"/>
 
 </p>
