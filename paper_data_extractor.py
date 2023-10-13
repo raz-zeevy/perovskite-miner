@@ -8,6 +8,8 @@ import os
 import json
 import re
 
+RESULTS_DIR = "results/"
+
 
 def log_gpt_results_json(p_prompt: PaperPrompt, res, pdf_path,
                          accuracy, fields) -> None:
@@ -97,9 +99,10 @@ def results_to_df(res, kpi_fields: list):
 def mine_paper(paper_pdf_path, fake=False):
     def output_name(paper_pdf_path):
         split_name = re.split(r'[./]', paper_pdf_path)
-        # split_name = paper_pdf_path.split("./")
         pdf_name = split_name[-2]
-        return "results/" + pdf_name + "_api_results.csv"
+        if not os.path.exists(RESULTS_DIR):
+            os.makedirs(RESULTS_DIR)
+        return RESULTS_DIR + pdf_name + "_api_results.csv"
 
     y_pred = gpt_fill(paper_pdf_path, fake=fake)
     if isinstance(y_pred, DataFrame):
