@@ -7,6 +7,9 @@ import datetime
 from data.utils import *
 import os
 import json
+import re
+
+RESULTS_DIR = "results/"
 
 
 def log_gpt_results_json(p_prompt: PaperPrompt, res, pdf_path,
@@ -92,14 +95,20 @@ def results_to_df(res, kpi_fields: list):
     res_df = res_df.append(matched_values, ignore_index=True)
     return res_df
 
+  
+#  todo: should split to 2 functions: one that extracts the data and another that saves it to a csv file.
 def mine_paper(paper_pdf_path, fake=False):
     def output_name(paper_pdf_path):
-        split_name = paper_pdf_path.split(".")
-        output = ".".join(split_name[:-1])
-        return output + "_api_results.csv"
+        split_name = re.split(r'[./]', paper_pdf_path)
+        pdf_name = split_name[-2]
+        if not os.path.exists(RESULTS_DIR):
+            os.makedirs(RESULTS_DIR)
+        return RESULTS_DIR + pdf_name + "_api_results.csv"
 
     y_pred = gpt_fill(paper_pdf_path, fake=fake)
     if isinstance(y_pred, DataFrame):
+        y_pred = pd.DataFrame(np.vstack([y_pred.columns, y_pred])).T
+        y_pred.columns = ['Field name', 'AI question', 'AI answer']
         y_pred.to_csv(output_name(paper_pdf_path), index=False)
     return y_pred
 
