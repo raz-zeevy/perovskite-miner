@@ -92,9 +92,6 @@ Once the `config.py` is set up, you can utilize the various modules and scripts 
 - **API Integrations**:
   The `apis` directory contains scripts for integrating with machine learning models. Run the desired API script as needed.
 
-- **Data Scraping**:
-  Use the scripts in the `scraper` directory to gather the latest research papers and data.
-
 - **For Developers**
  If you're a developer or you're debugging the tool, there's an optional fake argument you can use:
   ```bash
