@@ -26,33 +26,35 @@ Our project places a specific emphasis on harvesting data related to perovskite 
 
 ## Conclusions
 
-Through the development and deployment of our data extraction pipeline, we've reached the following noteworthy conclusions and achievements:
+Through the development and implementation of this data extraction pipeline, we have achieved the following conclusions and outcomes:
 
-- **Automation:** Our pipeline adeptly automates the arduous task of extracting data from PDF documents, significantly mitigating manual effort and potential errors.
+- Automation: The pipeline successfully automates the process of data extraction from PDF documents, significantly reducing manual effort and potential errors.
 
-- **Data Standardization:** Extracted data is systematically structured into a CSV format, rendering it suitable for seamless integration into databases and subsequent analysis.
+- Data Standardization: The extracted data is standardized into a structured CSV format, making it suitable for integration into databases and further analysis.
 
-- **Time Efficiency:** Our pipeline has proven itself as a time-efficient solution, especially when dealing with a substantial volume of PDF documents.
+- Time Efficiency: Our pipeline has proven to be a time-efficient solution for extracting experimental data from a large number of PDF documents.
 
-- **Flexibility:** The utilization of a question protocol affords the flexibility needed to adapt the pipeline to diverse datasets and research domains.
+- Flexibility: The use of a question protocol provides flexibility in adapting the pipeline to different datasets and research domains.
 
-## Future Directions
+# Future Directions
 
-As we conclude this project, we envision several promising avenues for future development and enhancement:
+As we conclude this project, we envision several potential directions for future development and improvement:
 
-- **Enhancement of NLP Techniques:** Continuing to refine and bolster the accuracy and resilience of NLP-based data extraction methods.
+- **Analysis of Images, Graphs, and Tables:** Expanding our capabilities to extract data from images, graphs, and tables within PDF documents.
 
-- **Integration:** Seamlessly integrating our pipeline with existing materials science databases for effortless data aggregation and analysis.
+- **Enhancement of NLP Techniques:** Exploring the use of different Natural Language Processing (NLP) models and comparing their effectiveness in data extraction.
 
-- **User Interface:** Pioneering the development of a user-friendly interface to broaden the pipeline's accessibility.
+- **Integration:** Seamlessly integrating the pipeline with existing materials science databases to facilitate streamlined data aggregation and analysis.
 
-This project marks a significant stride toward automating the extraction of data from scientific documents. We eagerly anticipate its ongoing evolution and application within the realm of materials science research.
+- **User Interface:** Developing a user-friendly interface to enhance accessibility, making the pipeline more user-friendly for a broader audience.
 
-For any inquiries or contributions, please don't hesitate to contact us.
+This project represents a significant step toward automating data extraction from scientific documents, and we eagerly anticipate its continued development and application in materials science research.
+
+For any inquiries or contributions, please feel free to contact us.
 
 **Contact Information**:
 
 - [Iris Burmistrov]: [iris.burmistrov@mail.huji.ac.il]
-- [Raz Zeevy]: [raz3zeevy@gmail.com]
+- [Raz zeevy]: [raz3zeevy@gmail.com]
 
-We appreciate your interest and support!
+Thank you for your interest and support!
