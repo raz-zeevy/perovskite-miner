@@ -54,7 +54,7 @@ For any inquiries or contributions, please feel free to contact us.
 
 **Contact Information**:
 
-- [Iris Burmistrov] (iris.burmistrov@mail.huji.ac.il)
-- [Raz zeevy] (raz3zeevy@gmail.com)
+- Iris Burmistrov: iris.burmistrov@mail.huji.ac.il
+- Raz zeevy: raz3zeevy@gmail.com
 
 Thank you for your interest and support!
