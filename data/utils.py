@@ -2,13 +2,24 @@ import pandas as pd
 import numpy as np
 import math
 from data.questions_const import *
-from scraper.utils import sanitize
 import os
 from typing import List
+import re
 
 QUESTIONS_DB_CSV = r"dataset/questions/questions_db.csv"
 RESULTS_FOLDER = r"dataset/db_vs_model_output"
 
+def sanitize(filename):
+    # Define a regex pattern to match characters not allowed in file names
+    invalid_chars = r'[\/:*?"<>|]'
+    # Replace invalid characters with underscores
+    sanitized_filename = re.sub(invalid_chars, '_', filename)
+    # Trim any leading or trailing spaces and dots
+    sanitized_filename = sanitized_filename.strip('. ')
+    # Ensure the filename is not empty
+    if not sanitized_filename:
+        sanitized_filename = 'unnamed_file'
+    return sanitized_filename
 
 def filter_by_kpi(df: pd.DataFrame) -> None:
     kpi_fields = get_kpi_fields()
