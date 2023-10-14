@@ -42,9 +42,13 @@ As we conclude this project, we envision several potential directions for future
 
 - **Analysis of Images, Graphs, and Tables:** Expanding our capabilities to extract data from images, graphs, and tables within PDF documents.
 
-- **Enhancement of NLP Techniques:** Exploring the use of different Natural Language Processing (NLP) models and comparing their effectiveness in data extraction.
+**Fine Tuning:** Using the built-in openAI feature of pre-train a costume module in order to enhance its capacities of data extraction from the papers.
 
-- **Integration:** Seamlessly integrating the pipeline with existing materials science databases to facilitate streamlined data aggregation and analysis.
+- **Expanding to more LLM's:** Exploring the use of various Large Language Models (LLM) and comparing their effectiveness in data extraction.
+
+- **Incorporating Supervised Learning:** Incorporating in some way a supervised learning of extracting the entities related to the data fields from the text, harnessing the Pervoksite Database as tagged samples.
+
+- **Integration:** Integrating the pipeline with existing materials science databases to facilitate streamlined data aggregation and analysis.
 
 - **User Interface:** Developing a user-friendly interface to enhance accessibility, making the pipeline more user-friendly for a broader audience.
 
