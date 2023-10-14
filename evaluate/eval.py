@@ -129,7 +129,7 @@ def eval_random_error(n=100):
 
 
 def compare_results_from_db():
-    results_path = "dataset/papers/downloads/10.1002_adem.201900288_api_results.csv"
+    results_path = "../dataset/papers/downloads/10.1002_adem.201900288_api_results.csv"
     ai_res = pd.read_csv(results_path).iloc[1]
     pervo_data = load_perovskite_data()
     doi_number = '10.1002/adem.201900288'
@@ -209,9 +209,9 @@ def evaluate_combined_res(res_path: str):
     return score
 
 def evaluate_model():
-    for file in os.listdir('dataset/db_vs_model_output'):
+    for file in os.listdir('../dataset/db_vs_model_output'):
         if file.endswith(".csv") and not file.startswith("out_10"):
-            df = pd.read_csv(os.path.join('dataset/db_vs_model_output', file))
+            df = pd.read_csv(os.path.join('../dataset/db_vs_model_output', file))
             y_db = df.iloc[3]
             y_ai = df.iloc[2]
             error_rate = compute_error(y_ai, y_db)
