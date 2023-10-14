@@ -114,7 +114,7 @@ For any questions or feedback, please reach out to raz3zeevy@gmail.com or to iri
 
 ## License
 
-This project is licensed under the MIT License. See the `LICENSE` file for more details.
+This project is licensed under the MIT License
 
 
 <p align="center">
